@@ -65,10 +65,11 @@ Live Local App: http://localhost:51731-
 Double-click start_dev.bat from the root directory to automatically launch both the backend and frontend in separate terminals.
 Presentation Demo Accounts & Personas
 Database state resets automatically with python backend/seed.py:
-Role  |  Email / Identifier |  Password Access Scope  
-Trainee | aisha@connect.edu | password123 | Interactive course reader, competency telemetry, certificate viewer
-Trainer | aarav@connect.edu | password123 | Curriculum builder, checkpoint authoring, cohort analytics Central 
-Admin | admin.root@capacityconnect.gov | adminsecret2026 | Institutional educator queue, cryptographic audit logs
+| Role | Email / Identifier | Password | Access Scope |
+| :--- | :--- | :--- | :--- |
+| Trainee | `aisha@connect.edu` | `password123` | Interactive course reader, competency telemetry, certificate viewer |
+| Trainer | `aarav@connect.edu` | `password123` | Curriculum builder, checkpoint authoring, cohort analytics |
+| Central Admin | `admin.root@capacityconnect.gov` | `adminsecret2026` | Institutional educator queue, cryptographic audit logs |
 
 Note on Admin Access: Open the Sign-In modal and select "Admin Console Gateway" at the bottom footer to switch to the restricted governance interface.
 
