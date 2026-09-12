@@ -1,0 +1,9 @@
+@echo off
+echo Resetting database to clean presentation state...
+python backend/seed.py
+
+echo Launching FastAPI backend in background...
+start cmd /k "cd backend && uvicorn main:app --reload --port 8000"
+
+echo Launching Vite frontend...
+npm run dev
