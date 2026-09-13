@@ -92,7 +92,7 @@ const TRAINER_PROFILES: Record<string, TrainerCompetency> = {
     rating: 4.9,
     verified: true,
     skills: ['Microservices', 'FastAPI', 'Distributed Systems', 'Data Structures', 'RBAC Security'],
-    bio: 'Pioneering decentralized capacity building and air-gapped evaluation systems for national vocational education cohorts[cite: 2].',
+    bio: 'Pioneering decentralized capacity building and air-gapped evaluation systems for national vocational education cohorts.',
     publishedCoursesCount: 6,
     accreditationPassRate: '94.2%',
   },
@@ -104,7 +104,7 @@ const TRAINER_PROFILES: Record<string, TrainerCompetency> = {
     rating: 4.8,
     verified: true,
     skills: ['Community Mapping', 'Participatory Action Research (PAR)', 'Public Sector Governance'],
-    bio: 'Dedicated to grassroots skill acquisition, institutional outreach mapping, and scalable stakeholder feedback workflows[cite: 2].',
+    bio: 'Dedicated to grassroots skill acquisition, institutional outreach mapping, and scalable stakeholder feedback workflows.',
     publishedCoursesCount: 4,
     accreditationPassRate: '91.8%',
   },
@@ -116,7 +116,7 @@ const TRAINER_PROFILES: Record<string, TrainerCompetency> = {
     rating: 4.9,
     verified: true,
     skills: ['Statistical Inference', 'Predictive Modeling', 'Anomaly Detection', 'Cohort Telemetry'],
-    bio: 'Specializing in learner retention algorithms, statistical score variance, and server-side autograding pipelines[cite: 2].',
+    bio: 'Specializing in learner retention algorithms, statistical score variance, and server-side autograding pipelines.',
     publishedCoursesCount: 5,
     accreditationPassRate: '96.0%',
   },
@@ -133,16 +133,16 @@ const TRAINER_LINKEDIN_DATA: Record<string, {
 }> = {
   DEFAULT: {
     headline: 'Principal Pedagogical Architect • Lead Fellow in Distributed Computing Systems',
-    location: 'New Delhi, India • Capacity Connect Central Faculty',
+    location: 'New Delhi, India • AcademiaEdu Central Faculty',
     about:
-      'Passionate educator and systems architect specializing in asynchronous backend orchestration, non-blocking concurrency, and cryptographic accreditation standards[cite: 2]. Dedicated to bridging the gap between theoretical computer science and nationwide industry capacity building through hands-on, verifiable curricula[cite: 2].',
+      'Passionate educator and systems architect specializing in asynchronous backend orchestration, non-blocking concurrency, and cryptographic accreditation standards. Dedicated to bridging the gap between theoretical computer science and nationwide industry capacity building through hands-on, verifiable curricula.',
     experience: [
       {
         role: 'Principal Pedagogical Fellow & Systems Architect',
         organization: 'Capacity Connect National Training Framework',
         duration: '2023 - Present • 3 yrs',
         description:
-          'Authoring core technical curricula for microservices and cloud scalability, conducting server-side checkpoint evaluations, and mentoring institutional trainers[cite: 2].',
+          'Authoring core technical curricula for microservices and cloud scalability, conducting server-side checkpoint evaluations, and mentoring institutional trainers.',
       },
       {
         role: 'Associate Professor & Systems Researcher',
@@ -399,7 +399,7 @@ export const Index: React.FC = () => {
   const [assessmentsList, setAssessmentsList] = useState<AssessmentItem[]>(INITIAL_ASSESSMENTS);
   const [loadingSubmission, setLoadingSubmission] = useState(false);
 
-  // SIH 26075 Governance Data (Slide 2 & 4)[cite: 2]
+  // SIH 26075 Governance Data
   const [announcements, setAnnouncements] = useState([
     { id: 1, title: 'SIH 26075 Nationwide Accreditation Window Active', date: 'Sept 2026', author: 'Root Governance' },
     { id: 2, title: 'Decentralized Microservices Track Published by Faculty', date: 'Sept 2026', author: 'Technical Board' },
@@ -449,20 +449,20 @@ export const Index: React.FC = () => {
   const slides = [
     {
       badge: 'Smart India Hackathon 2026 • Problem Statement SIH 26075',
-      title: 'CAPACITY CONNECT: Unified Digital Capacity Building Portal',
-      desc: 'Centralized web portal addressing scattered learning resources, unverified trainer credentials, and lack of tracked learner progress (Team Techtonic)[cite: 2].',
+      title: 'Decentralized Capacity Building & Unified LMS Architecture',
+      desc: 'An institutional web platform resolving fragmented educational assets, unverified instructor credentials, and untracked learner telemetry through automated governance.',
       icon: '🏛️',
     },
     {
-      badge: 'Competitive Differentiator (Slide 6)',
+      badge: 'Core Platform Differentiator',
       title: 'Learner-Visible Trainer Competency Profiles',
-      desc: 'Transparent verification of faculty qualifications, domain experience, and accreditation rates before course selection[cite: 2].',
+      desc: 'Transparent verification of faculty qualifications, accredited domain experience, and historical cohort pass rates prior to course enrollment.',
       icon: '⭐',
     },
     {
-      badge: 'Cryptographic Provenance (Slide 3)',
+      badge: 'Cryptographic Provenance Engine',
       title: 'Air-Gapped Grading & HMAC SHA-256 Credentials',
-      desc: 'Tamper-resistant server-side assessment autograding minting immutable cryptographic digests registered to institutional profiles[cite: 2].',
+      desc: 'Tamper-resistant server-side assessment autograding minting immutable cryptographic digests registered to verifiable institutional profiles.',
       icon: '🔐',
     },
   ];
@@ -511,14 +511,12 @@ export const Index: React.FC = () => {
   const roleDisplay = rawRole.charAt(0).toUpperCase() + rawRole.slice(1);
   const institutionDisplay = (user as any)?.institution || 'Capacity Connect Central Node';
 
-  // Course Enrollment Handler (Slide 2: Trainee -> Enroll)[cite: 2]
   const handleToggleEnroll = (courseId: number) => {
     setCourses((prev) =>
       prev.map((c) => (c.id === courseId ? { ...c, enrolled: !c.enrolled } : c))
     );
   };
 
-  // Dynamic Course Reader Launcher
   const handleOpenCourseReader = (course: CourseItem) => {
     const targetModule = course.modules?.[0] || {
       id: course.id,
@@ -534,7 +532,6 @@ export const Index: React.FC = () => {
     setViewerModalOpen(true);
   };
 
-  // Launch Assessment Checkpoint
   const handleStartAssessment = (moduleOrCourseTitle: string) => {
     const matched = assessmentsList.find(
       (a) =>
@@ -565,7 +562,7 @@ export const Index: React.FC = () => {
             correct: 0,
           },
           {
-            q: 'How does Capacity Connect guarantee credential validity?',
+            q: 'How does AcademiaEdu guarantee credential validity?',
             options: [
               'Immutable HMAC SHA-256 cryptographic signatures tied to candidate public identities',
               'Plaintext unencrypted client storage',
@@ -585,7 +582,6 @@ export const Index: React.FC = () => {
     setGradingResult(null);
   };
 
-  // Submit and Grade Evaluation
   const handleQuizSubmit = () => {
     if (!activeQuizItem) return;
     setLoadingSubmission(true);
@@ -619,12 +615,10 @@ export const Index: React.FC = () => {
     }, 350);
   };
 
-  // Admin Trainer Approval Action (Slide 2 & 4: Admin -> Approve Users)[cite: 2]
   const handleApproveTrainer = (trainerId: number) => {
     setPendingTrainers((prev) => prev.filter((t) => t.id !== trainerId));
   };
 
-  // Authoring Callbacks
   const handleModuleCreated = (newMod: any) => {
     const newCourseItem: CourseItem = {
       id: Date.now(),
@@ -696,12 +690,12 @@ export const Index: React.FC = () => {
     } else if (role === 'trainer') {
       login('demo-token-trainer', { id: 102, name: 'Prof. Aarav Mehta', email: 'aarav@connect.edu', role: 'trainer' });
     } else {
-      login('demo-token-admin', { id: 103, name: 'Team Techtonic Admin', email: 'admin.root@capacityconnect.gov', role: 'admin' });
+      login('demo-token-admin', { id: 103, name: 'Central Root Authority', email: 'admin.root@capacityconnect.gov', role: 'admin' });
     }
   };
 
   const handleSimulateHash = () => {
-    const raw = `${simCandidate}:${simScore}:${Date.now()}:SIH26075:CAPACITYCONNECT`;
+    const raw = `${simCandidate}:${simScore}:${Date.now()}:SIH26075:ACADEMIAEDU`;
     let hash = 0;
     for (let i = 0; i < raw.length; i++) {
       hash = ((hash << 5) - hash) + raw.charCodeAt(i);
@@ -712,84 +706,93 @@ export const Index: React.FC = () => {
   };
 
   // =========================================================================
-  // PRE-LOGIN DISPLAY (TEAM TECHTONIC • SIH 26075 SPECIFICATION)[cite: 2]
+  // PRE-LOGIN DISPLAY (ENTERPRISE PRODUCT DESIGN + SIH 26075 SPECIFICATION)
   // =========================================================================
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#070B14] text-slate-100 flex flex-col justify-between relative overflow-x-hidden">
+      <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#070B14] text-slate-900 dark:text-slate-100 transition-colors duration-200 flex flex-col justify-between relative overflow-x-hidden">
+        {/* Atmospheric Glow Orbs */}
         <div className="fixed inset-0 pointer-events-none z-0">
-          <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-indigo-600/10 blur-[130px] rounded-full" />
-          <div className="absolute top-96 -left-40 w-[500px] h-[500px] bg-cyan-600/5 blur-[120px] rounded-full" />
+          <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-indigo-500/10 dark:bg-indigo-600/10 blur-[130px] rounded-full" />
+          <div className="absolute top-96 -left-40 w-[500px] h-[500px] bg-cyan-500/5 dark:bg-cyan-600/5 blur-[120px] rounded-full" />
         </div>
 
-        <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-[#0B101E]/90 backdrop-blur-xl px-6 py-3.5 flex items-center justify-between shadow-2xl shadow-black/40">
+        {/* Global Header */}
+        <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800/80 bg-white/90 dark:bg-[#0B101E]/90 backdrop-blur-xl px-6 py-3.5 flex items-center justify-between shadow-xs dark:shadow-2xl dark:shadow-black/40">
           <AcademiaLogo size={36} />
           <div className="flex items-center gap-3">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-xl border border-slate-800 bg-slate-900/80 text-slate-300 hover:text-white transition"
+              className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:text-white transition shadow-xs"
               aria-label="Toggle Theme"
             >
               {theme === 'light' ? '🌙' : '☀️'}
             </button>
             <button
               onClick={() => setAuthModalOpen(true)}
-              className="text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-md transition"
+              className="text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition"
             >
               Sign In
             </button>
           </div>
         </header>
 
+        {/* Hero Section */}
         <main className="max-w-7xl mx-auto px-6 py-12 w-full grow relative z-10 space-y-16">
           <div className="text-center max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-800/80 text-indigo-300 text-xs font-bold shadow-lg">
-              <span className="w-2 h-2 rounded-full bg-indigo-400 animate-ping" />
-              <span>Smart India Hackathon 2026 • Problem Statement SIH 26075 • Team Techtonic</span>[cite: 2]
+            {/* Context Pill */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-800/80 text-indigo-700 dark:text-indigo-300 text-xs font-bold shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-indigo-600 dark:bg-indigo-400 animate-ping" />
+              <span>Smart India Hackathon 2026 • Problem Statement SIH 26075 • Team Techtonic</span>
             </div>
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-tight">
-              CAPACITY CONNECT: Digital Capacity Building & LMS Portal[cite: 2]
+
+            {/* Enterprise Product Headline */}
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-tight text-slate-950 dark:text-white">
+              Institutional Capacity Building & Verifiable Learning Engine
             </h1>
-            <p className="text-base sm:text-lg text-slate-400 leading-relaxed max-w-2xl mx-auto">
-              A unified digital ecosystem supporting organizational training, transparent trainer competency mapping, auto-graded assessments, and cryptographic qualifications[cite: 2].
+            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
+              A unified digital ecosystem supporting organizational training, transparent trainer competency mapping, auto-graded assessments, and cryptographic qualifications.
             </p>
+
+            {/* Primary Action Buttons */}
             <div className="pt-2 flex flex-wrap justify-center gap-4">
               <button
                 onClick={() => setAuthModalOpen(true)}
-                className="px-6 py-3 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition transform hover:-translate-y-0.5"
+                className="px-6 py-3 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/25 transition transform hover:-translate-y-0.5 text-xs sm:text-sm"
               >
                 Portal Sign In / Register
               </button>
               <button
                 onClick={() => setShowArchModal(true)}
-                className="px-6 py-3 rounded-xl font-bold border border-slate-800 bg-[#0F172A]/80 text-slate-200 hover:border-slate-700 transition"
+                className="px-6 py-3 rounded-xl font-bold border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0F172A]/80 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:border-slate-700 transition text-xs sm:text-sm shadow-xs"
               >
                 Architecture Blueprint ↗
               </button>
               <button
                 onClick={() => setShowSimulatorModal(true)}
-                className="px-6 py-3 rounded-xl font-bold border border-cyan-800/70 bg-cyan-950/30 text-cyan-300 hover:bg-cyan-950/60 transition"
+                className="px-6 py-3 rounded-xl font-bold border border-cyan-300 dark:border-cyan-800/70 bg-cyan-50/80 dark:bg-cyan-950/30 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100 dark:hover:bg-cyan-950/60 transition text-xs sm:text-sm shadow-xs"
               >
                 Live Hash Simulator ⚙
               </button>
             </div>
           </div>
 
-          <div className="p-8 rounded-3xl border border-slate-800/80 bg-[#0E1526]/80 backdrop-blur-md shadow-2xl relative overflow-hidden">
+          {/* Interactive Slide Carousel */}
+          <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#0E1526]/80 backdrop-blur-md shadow-xl dark:shadow-2xl relative overflow-hidden">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-extrabold uppercase tracking-widest text-indigo-400">
+              <span className="text-xs font-extrabold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
                 {slides[currentSlide].badge}
               </span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentSlide((p) => (p === 0 ? slides.length - 1 : p - 1))}
-                  className="w-8 h-8 rounded-lg border border-slate-800 flex items-center justify-center text-sm font-bold hover:bg-slate-800"
+                  className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 flex items-center justify-center text-sm font-bold transition"
                 >
                   ←
                 </button>
                 <button
                   onClick={() => setCurrentSlide((p) => (p === slides.length - 1 ? 0 : p + 1))}
-                  className="w-8 h-8 rounded-lg border border-slate-800 flex items-center justify-center text-sm font-bold hover:bg-slate-800"
+                  className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 flex items-center justify-center text-sm font-bold transition"
                 >
                   →
                 </button>
@@ -797,66 +800,74 @@ export const Index: React.FC = () => {
             </div>
 
             <div className="grid md:grid-cols-12 gap-6 items-center">
-              <div className="md:col-span-2 text-6xl flex justify-center items-center p-6 bg-slate-900/80 border border-slate-800 rounded-2xl shadow-inner">
+              <div className="md:col-span-2 text-6xl flex justify-center items-center p-6 bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-inner">
                 {slides[currentSlide].icon}
               </div>
               <div className="md:col-span-10 space-y-2">
-                <h3 className="text-2xl font-black">{slides[currentSlide].title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">{slides[currentSlide].desc}</p>
+                <h3 className="text-2xl font-black text-slate-900 dark:text-white">{slides[currentSlide].title}</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{slides[currentSlide].desc}</p>
               </div>
             </div>
           </div>
 
-          {/* 1-Click Persona Demonstrators for Presentation Evaluators */}
-          <div className="p-8 rounded-3xl border border-slate-800/80 bg-[#0E1526]/80 shadow-2xl space-y-6">
+          {/* Evaluator 1-Click Instant Gateways */}
+          <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#0E1526]/80 shadow-xl dark:shadow-2xl space-y-6">
             <div>
-              <h3 className="text-xl font-bold tracking-tight">Evaluator Instant Gateway</h3>
-              <p className="text-xs text-slate-400 mt-1">Bypass manual entry to evaluate role-isolated workspaces immediately:</p>
+              <h3 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Evaluator Instant Gateway</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Bypass manual authentication to evaluate role-isolated permissions and custom dashboards:
+              </p>
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
-              <div className="p-5 rounded-2xl border border-slate-800 bg-slate-900/90 flex flex-col justify-between space-y-4">
+              <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/90 flex flex-col justify-between space-y-4 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition">
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-indigo-400 bg-indigo-950/80 px-2 py-0.5 rounded border border-indigo-800/50">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/80 px-2 py-0.5 rounded border border-indigo-200 dark:border-indigo-800/50">
                     Trainee Persona
                   </span>
-                  <h4 className="font-bold text-base mt-2">Divyansh Chauhan</h4>
-                  <p className="text-xs text-slate-400 mt-1">Find & enroll, view trainer competency, take tests, mint certificates, and submit feedback[cite: 2].</p>
+                  <h4 className="font-bold text-base mt-2 text-slate-900 dark:text-white">Divyansh Chauhan</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Find & enroll, inspect trainer competency, complete modules, mint certificates, and submit feedback.
+                  </p>
                 </div>
                 <button
                   onClick={() => quickDemoLogin('trainee')}
-                  className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md transition"
+                  className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/20 transition"
                 >
                   Launch as Trainee →
                 </button>
               </div>
 
-              <div className="p-5 rounded-2xl border border-slate-800 bg-slate-900/90 flex flex-col justify-between space-y-4">
+              <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/90 flex flex-col justify-between space-y-4 hover:border-cyan-400 dark:hover:border-cyan-500/40 transition">
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/50">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-cyan-700 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-200 dark:border-cyan-800/50">
                     Trainer Persona
                   </span>
-                  <h4 className="font-bold text-base mt-2">Prof. Aarav Mehta</h4>
-                  <p className="text-xs text-slate-400 mt-1">Manage training tracks, upload multi-format resources (PDF/Video/Link), author checkpoints, and monitor cohorts[cite: 2].</p>
+                  <h4 className="font-bold text-base mt-2 text-slate-900 dark:text-white">Prof. Aarav Mehta</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    LinkedIn-style competency profile, training track management, multi-format resource uploads, and quiz creation.
+                  </p>
                 </div>
                 <button
                   onClick={() => quickDemoLogin('trainer')}
-                  className="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shadow-md transition"
+                  className="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-600/20 transition"
                 >
                   Launch as Trainer →
                 </button>
               </div>
 
-              <div className="p-5 rounded-2xl border border-slate-800 bg-slate-900/90 flex flex-col justify-between space-y-4">
+              <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/90 flex flex-col justify-between space-y-4 hover:border-purple-400 dark:hover:border-purple-500/40 transition">
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-purple-400 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-800/50">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-purple-700 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/80 px-2 py-0.5 rounded border border-purple-200 dark:border-purple-800/50">
                     Admin Persona
                   </span>
-                  <h4 className="font-bold text-base mt-2">Central Root Authority</h4>
-                  <p className="text-xs text-slate-400 mt-1">Approve pending trainer applications, dispatch institutional announcements, and monitor central telemetry[cite: 2].</p>
+                  <h4 className="font-bold text-base mt-2 text-slate-900 dark:text-white">Team Techtonic Central Admin</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Approve incoming trainers, broadcast institutional announcements, and monitor central governance audits.
+                  </p>
                 </div>
                 <button
                   onClick={() => quickDemoLogin('admin')}
-                  className="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-md transition"
+                  className="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-600/20 transition"
                 >
                   Launch as Admin →
                 </button>
@@ -865,65 +876,67 @@ export const Index: React.FC = () => {
           </div>
         </main>
 
+        {/* Architecture Blueprint Modal */}
         {showArchModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
-            <div className="bg-[#0E1526] border border-slate-800 rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
-              <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 className="font-bold text-lg">Capacity Connect Architecture Blueprint (Slide 3)[cite: 2]</h3>
-                <button onClick={() => setShowArchModal(false)} className="text-slate-400 hover:text-white font-bold">✕</button>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/75 backdrop-blur-sm p-4">
+            <div className="bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-slate-800 rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
+                <h3 className="font-bold text-lg text-slate-900 dark:text-white">AcademiaEdu Architecture Blueprint</h3>
+                <button onClick={() => setShowArchModal(false)} className="text-slate-400 hover:text-slate-700 dark:hover:text-white font-bold">✕</button>
               </div>
-              <div className="space-y-4 text-xs text-slate-400 leading-relaxed font-mono">
-                <div className="p-4 rounded-xl bg-[#0B101E] border border-slate-800">
-                  <div className="text-indigo-400 font-bold mb-1">[Frontend Tier: React + Vite + Tailwind]</div>
-                  Stateless interface interacting via OAuth2 Bearer JWT[cite: 2]. Zero client evaluation secrets.
+              <div className="space-y-4 text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-mono">
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0B101E] border border-slate-200 dark:border-slate-800">
+                  <div className="text-indigo-600 dark:text-indigo-400 font-bold mb-1">[Frontend Tier: React + Vite + Tailwind]</div>
+                  Stateless interface interacting via OAuth2 Bearer JWT. Zero client evaluation secrets.
                 </div>
-                <div className="p-4 rounded-xl bg-[#0B101E] border border-slate-800">
-                  <div className="text-cyan-400 font-bold mb-1">[Backend Engine: FastAPI + SQLAlchemy + PostgreSQL]</div>
-                  Asynchronous autograding engine & HMAC SHA-256 digital certificate stamping[cite: 2].
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0B101E] border border-slate-200 dark:border-slate-800">
+                  <div className="text-cyan-600 dark:text-cyan-400 font-bold mb-1">[Backend Engine: FastAPI + SQLAlchemy + PostgreSQL]</div>
+                  Asynchronous autograding engine & HMAC SHA-256 digital certificate stamping.
                 </div>
-                <div className="p-4 rounded-xl bg-[#0B101E] border border-slate-800">
-                  <div className="text-emerald-400 font-bold mb-1">[Differentiator: Trainer Competency Matching]</div>
-                  Peer-reviewed trainer profiles & verified institutional skill accreditation mapping[cite: 2].
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0B101E] border border-slate-200 dark:border-slate-800">
+                  <div className="text-emerald-600 dark:text-emerald-400 font-bold mb-1">[Differentiator: Trainer Competency Matching]</div>
+                  Peer-reviewed trainer profiles & verified institutional skill accreditation mapping.
                 </div>
               </div>
-              <button onClick={() => setShowArchModal(false)} className="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs">
+              <button onClick={() => setShowArchModal(false)} className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition">
                 Close Blueprint
               </button>
             </div>
           </div>
         )}
 
+        {/* Live Simulator Modal */}
         {showSimulatorModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
-            <div className="bg-[#0E1526] border border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-              <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 className="font-bold text-lg">Live HMAC SHA-256 Simulator</h3>
-                <button onClick={() => setShowSimulatorModal(false)} className="text-slate-400 hover:text-white font-bold">✕</button>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/75 backdrop-blur-sm p-4">
+            <div className="bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
+                <h3 className="font-bold text-lg text-slate-900 dark:text-white">Live HMAC SHA-256 Simulator</h3>
+                <button onClick={() => setShowSimulatorModal(false)} className="text-slate-400 hover:text-slate-700 dark:hover:text-white font-bold">✕</button>
               </div>
               <div className="space-y-3">
                 <div>
-                  <label className="text-[11px] font-bold uppercase text-slate-400">Candidate Name</label>
+                  <label className="text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400">Candidate Name</label>
                   <input
                     type="text"
                     value={simCandidate}
                     onChange={(e) => setSimCandidate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-800 bg-[#0B101E] text-xs mt-1 outline-none text-white"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0B101E] text-xs mt-1 outline-none text-slate-900 dark:text-white"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-bold uppercase text-slate-400">Passing Score (%)</label>
+                  <label className="text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400">Passing Score (%)</label>
                   <input
                     type="number"
                     value={simScore}
                     onChange={(e) => setSimScore(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-800 bg-[#0B101E] text-xs mt-1 outline-none text-white"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0B101E] text-xs mt-1 outline-none text-slate-900 dark:text-white"
                   />
                 </div>
-                <button onClick={handleSimulateHash} className="w-full py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">
+                <button onClick={handleSimulateHash} className="w-full py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition">
                   Compute Verifiable Digital Digest
                 </button>
                 {simulatedHash && (
-                  <div className="p-3 rounded-xl bg-[#0B101E] border border-slate-800 break-all text-[11px] font-mono text-emerald-400">
+                  <div className="p-3 rounded-xl bg-slate-100 dark:bg-[#0B101E] border border-slate-200 dark:border-slate-800 break-all text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
                     {simulatedHash}
                   </div>
                 )}
@@ -933,15 +946,15 @@ export const Index: React.FC = () => {
         )}
 
         {authModalOpen && <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />}
-        <footer className="border-t border-slate-800/80 py-6 px-6 text-center text-xs text-slate-500">
-          Capacity Connect • Smart India Hackathon 2026 • Problem Statement SIH 26075 • Team Techtonic[cite: 2]
+        <footer className="border-t border-slate-200 dark:border-slate-800/80 py-6 px-6 text-center text-xs text-slate-500 dark:text-slate-400">
+          AcademiaEdu • Smart India Hackathon 2026 • Problem Statement SIH 26075 • Team Techtonic
         </footer>
       </div>
     );
   }
 
   // =========================================================================
-  // POST-LOGIN DISPLAY (COMPREHENSIVE MULTI-ROLE LMS WORKSPACE)
+  // POST-LOGIN DISPLAY (AUTHENTICATED LMS WORKSPACE)
   // =========================================================================
   return (
     <div className="min-h-screen bg-[#f6f8fc] dark:bg-[#070B14] text-slate-900 dark:text-slate-100 transition-colors duration-200 font-sans">
@@ -1121,14 +1134,14 @@ export const Index: React.FC = () => {
               <Sparkles size={16} />
             </div>
             <p className="text-xs font-bold">{roleDisplay} Tier Active</p>
-            <p className="mt-1 text-[10px] text-slate-400">Strict RBAC segregation enforced[cite: 2].</p>
+            <p className="mt-1 text-[10px] text-slate-400">Strict RBAC segregation enforced.</p>
           </div>
         </aside>
 
-        {/* Dynamic Display Area */}
+        {/* Dynamic Main Workspace Pane */}
         <main className="min-w-0 flex-1 px-4 py-7 sm:px-7 lg:px-10 lg:py-9">
           <div className="mx-auto max-w-[1120px]">
-            {/* Institutional Announcement Banner (Slide 2: Announcements)[cite: 2] */}
+            {/* Institutional Announcement Banner */}
             {announcements.length > 0 && (
               <div className="mb-6 p-4 rounded-2xl border border-indigo-200 dark:border-indigo-900/60 bg-gradient-to-r from-blue-50 via-indigo-50/50 to-white dark:from-indigo-950/40 dark:via-slate-900 dark:to-slate-900 flex items-center justify-between shadow-xs">
                 <div className="flex items-center gap-3">
@@ -1177,7 +1190,7 @@ export const Index: React.FC = () => {
                 </h1>
               </div>
 
-              {/* Action Trigger Buttons w.r.t Role */}
+              {/* Action Trigger Buttons */}
               {rawRole === 'trainer' && (
                 <div className="flex items-center gap-2 flex-wrap">
                   <button
@@ -1217,17 +1230,14 @@ export const Index: React.FC = () => {
             {workspaceTab === 'overview' && (
               <>
                 {rawRole === 'trainer' ? (
-                  /* =========================================================
-                     LINKEDIN-STYLE FACULTY COMPETENCY PROFILE (TRAINER VIEW)[cite: 2]
-                     ========================================================= */
+                  /* LINKEDIN-STYLE FACULTY COMPETENCY PROFILE */
                   <div className="space-y-6 mb-10">
-                    {/* Profile Header Card */}
                     <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] overflow-hidden shadow-xs">
                       <div className="h-32 bg-gradient-to-r from-blue-700 via-indigo-700 to-cyan-600 relative">
                         <div className="absolute top-3 right-4 flex items-center gap-2">
                           <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[11px] font-bold border border-white/30 flex items-center gap-1.5">
                             <ShieldCheck size={13} className="text-emerald-300" />
-                            Verified Institutional Faculty[cite: 2]
+                            Verified Institutional Faculty
                           </span>
                         </div>
                       </div>
@@ -1276,10 +1286,8 @@ export const Index: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Multi-Block Suite */}
                     <div className="grid lg:grid-cols-3 gap-6">
                       <div className="lg:col-span-2 space-y-6">
-                        {/* 1. About Block */}
                         <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-3">
                           <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
                             <FileText size={16} className="text-blue-600 dark:text-indigo-400" /> About
@@ -1289,7 +1297,6 @@ export const Index: React.FC = () => {
                           </p>
                         </div>
 
-                        {/* 2. Professional Experience Block */}
                         <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-4">
                           <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
                             <Briefcase size={16} className="text-blue-600 dark:text-indigo-400" /> Professional Experience
@@ -1322,7 +1329,6 @@ export const Index: React.FC = () => {
                       </div>
 
                       <div className="space-y-6">
-                        {/* 3. Education Block */}
                         <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-4">
                           <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
                             <GraduationCap size={16} className="text-blue-600 dark:text-indigo-400" /> Education & Qualifications
@@ -1340,7 +1346,6 @@ export const Index: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* 4. Licenses & Certifications Block */}
                         <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-4">
                           <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
                             <Award size={16} className="text-emerald-500" /> Licenses & Certifications
@@ -1364,7 +1369,6 @@ export const Index: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* 5. Verified Competencies Block */}
                         <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-3">
                           <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
                             <CheckCircle2 size={16} className="text-blue-600 dark:text-indigo-400" /> Verified Competencies
@@ -1384,9 +1388,7 @@ export const Index: React.FC = () => {
                     </div>
                   </div>
                 ) : (
-                  /* =========================================================
-                     STANDARD 4 STAT CARDS (TRAINEE & ADMIN OVERVIEW)
-                     ========================================================= */
+                  /* STANDARD 4 STAT CARDS (TRAINEE & ADMIN OVERVIEW) */
                   <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
                     <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
                       <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">
@@ -1415,12 +1417,12 @@ export const Index: React.FC = () => {
                   </div>
                 )}
 
-                {/* Admin Trainer Approval Queue (Slide 2 & 4: Admin -> Approve Users)[cite: 2] */}
+                {/* Admin Trainer Approval Queue */}
                 {rawRole === 'admin' && pendingTrainers.length > 0 && (
                   <div className="mt-8 rounded-2xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/40 dark:bg-amber-950/20 p-5 space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-extrabold text-xs uppercase tracking-wider">
-                        <UserCheck size={16} /> Pending Trainer Verification Queue ({pendingTrainers.length})[cite: 2]
+                        <UserCheck size={16} /> Pending Trainer Verification Queue ({pendingTrainers.length})
                       </div>
                       <span className="text-[10px] text-amber-600 dark:text-amber-400">Admin Clearance Required</span>
                     </div>
@@ -1449,15 +1451,15 @@ export const Index: React.FC = () => {
                   </div>
                 )}
 
-                {/* Course Directory / Open Library Marketplace (Slide 3)[cite: 2] */}
+                {/* Course Directory / Open Library Marketplace */}
                 <div className="mt-9">
                   <div className="flex items-center justify-between">
                     <div>
                       <h2 className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white">
-                        Marketplace & Open Library Hub[cite: 2]
+                        Marketplace & Open Library Hub
                       </h2>
                       <p className="text-xs text-slate-500 dark:text-slate-400">
-                        Institutional course tracks with transparent faculty competency mapping (Slide 6)[cite: 2].
+                        Institutional course tracks with transparent faculty competency mapping.
                       </p>
                     </div>
                     {rawRole === 'trainer' && (
@@ -1496,7 +1498,7 @@ export const Index: React.FC = () => {
 
                         <div className="p-4 flex flex-col justify-between grow space-y-4">
                           <div>
-                            {/* Learner-Visible Trainer Competency Trigger (Slide 2 & 6)[cite: 2] */}
+                            {/* Learner-Visible Trainer Competency Trigger */}
                             <button
                               onClick={() => {
                                 const profile = TRAINER_PROFILES[c.instructor] || {
@@ -1507,7 +1509,7 @@ export const Index: React.FC = () => {
                                   rating: 4.8,
                                   verified: true,
                                   skills: ['Applied Pedagogy', 'Skill Telemetry', 'Cloud Engineering'],
-                                  bio: 'Verified faculty member on the Capacity Connect nationwide training network[cite: 2].',
+                                  bio: 'Verified faculty member on the AcademiaEdu nationwide training network.',
                                   publishedCoursesCount: 3,
                                   accreditationPassRate: '92.5%',
                                 };
@@ -1786,9 +1788,8 @@ export const Index: React.FC = () => {
                       }}
                       className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-700"
                     >
-                      <Award size={16} /> Mint Verifiable SHA-256 Certificate[cite: 2]
+                      <Award size={16} /> Mint Verifiable SHA-256 Certificate
                     </button>
-                    {/* Feedback loop trigger button */}
                     <button
                       onClick={() => {
                         setActiveFeedbackCourse({ title: activeQuizItem.module, instructor: 'Prof. Aarav Mehta' });
@@ -1938,7 +1939,7 @@ export const Index: React.FC = () => {
         isOpen={uploadResourceOpen}
         courses={courses}
         onClose={() => setUploadResourceOpen(false)}
-        onUpload={(res) => console.log('Resource asset published to S3/Cloudflare R2 (Slide 3):', res)}
+        onUpload={(res) => console.log('Resource asset published to S3/Cloudflare R2:', res)}
       />
 
       <AnnouncementsModal
