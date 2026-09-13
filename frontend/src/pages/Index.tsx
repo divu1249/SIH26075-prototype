@@ -229,7 +229,7 @@ const INITIAL_ASSESSMENTS: AssessmentItem[] = [
         correct: 0,
       },
       {
-        q: 'Which stakeholder engagement method produces the highest grassroots feedback yield?',
+        q: 'Which stakeholder engagement method produces highest grassroots feedback yield?',
         options: [
           'Anonymous cold surveys',
           'Participatory Action Research (PAR)',
@@ -270,33 +270,35 @@ const INITIAL_ASSESSMENTS: AssessmentItem[] = [
 export const Index: React.FC = () => {
   const { user, login, logout, theme, toggleTheme } = useAuth();
 
-  // Navigation & View States
+  // Workspace Navigation & Controls
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>('overview');
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileNav, setMobileNav] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
-  // Dynamic Data Stores
+  // Dynamic Stores
   const [courses, setCourses] = useState<CourseItem[]>(INITIAL_COURSES);
   const [assessmentsList, setAssessmentsList] = useState<AssessmentItem[]>(INITIAL_ASSESSMENTS);
   const [loadingSubmission, setLoadingSubmission] = useState(false);
 
-  // Modals & Overlays
+  // Modals & Panels
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showArchModal, setShowArchModal] = useState(false);
   const [showSimulatorModal, setShowSimulatorModal] = useState(false);
   const [createModuleOpen, setCreateModuleOpen] = useState(false);
   const [createQuizOpen, setCreateQuizOpen] = useState(false);
+
+  // Certificate Modal State
   const [certModalOpen, setCertModalOpen] = useState(false);
   const [activeCertModule, setActiveCertModule] = useState('');
   const [certScore, setCertScore] = useState(100);
 
-  // Dynamic Lesson Viewer State
+  // Module Viewer Modal State
   const [viewerModalOpen, setViewerModalOpen] = useState(false);
-  const [activeViewerModule, setActiveViewerModule] = useState<LessonModule | null>(null);
+  const [activeViewerModule, setActiveViewerModule] = useState<any>(null);
 
-  // Dynamic Quiz Engine State
+  // Interactive Quiz Engine State
   const [activeQuizItem, setActiveQuizItem] = useState<AssessmentItem | null>(null);
   const [quizStep, setQuizStep] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
@@ -330,14 +332,13 @@ export const Index: React.FC = () => {
     },
   ];
 
-  // Simulator State
+  // Pre-Login Simulator State
   const [simCandidate, setSimCandidate] = useState('Aisha Verma');
   const [simScore, setSimScore] = useState(88);
   const [simulatedHash, setSimulatedHash] = useState('');
 
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://academia-prototype.onrender.com';
 
-  // Synchronize with backend on load while preserving rich modules
   useEffect(() => {
     fetch(`${apiBaseUrl}/courses`)
       .then((res) => (res.ok ? res.json() : []))
@@ -362,7 +363,7 @@ export const Index: React.FC = () => {
       .catch(() => console.log('Serving offline synchronized course catalog.'));
   }, [apiBaseUrl]);
 
-  // Authenticated User Identity
+  // Derived User Identity
   const displayName = useMemo(() => {
     if (!user) return 'Candidate';
     if ((user as any).fullName) return (user as any).fullName;
@@ -375,22 +376,23 @@ export const Index: React.FC = () => {
   const roleDisplay = rawRole.charAt(0).toUpperCase() + rawRole.slice(1);
   const institutionDisplay = (user as any)?.institution || 'AcademiaEdu Central Node';
 
-  // Dynamic Course & Module Viewer Launcher
+  // Dynamic Course Reader Launcher
   const handleOpenCourseReader = (course: CourseItem) => {
     const targetModule = course.modules?.[0] || {
       id: course.id,
       title: `${course.title} — Comprehensive Overview`,
+      courseTitle: course.title,
       description: course.description,
       duration_minutes: 45,
-      content: `# ${course.title}\n\n${course.description}\n\n### Curriculum Outline\nReview each lesson thoroughly before launching the evaluation checkpoint.`,
+      content: `# ${course.title}\n\n${course.description}`,
       order_index: 1,
       completed: course.progress === 100,
     };
-    setActiveViewerModule(targetModule);
+    setActiveViewerModule({ ...targetModule, courseTitle: course.title });
     setViewerModalOpen(true);
   };
 
-  // Dynamic Assessment Launcher (Resolves or generates checkpoint for any course)
+  // Dynamic Assessment Checkpoint Launcher
   const handleStartAssessment = (moduleOrCourseTitle: string) => {
     const matched = assessmentsList.find(
       (a) =>
@@ -402,7 +404,6 @@ export const Index: React.FC = () => {
     if (matched) {
       setActiveQuizItem(matched);
     } else {
-      // Dynamically instantiate a custom evaluation checkpoint if not yet authored
       const dynamicQuiz: AssessmentItem = {
         id: `quiz-dyn-${Date.now()}`,
         title: `${moduleOrCourseTitle} Checkpoint`,
@@ -412,7 +413,7 @@ export const Index: React.FC = () => {
         duration: '10 min',
         questions: [
           {
-            q: `What is the core technical outcome of ${moduleOrCourseTitle}?`,
+            q: `What is the primary technical objective of ${moduleOrCourseTitle}?`,
             options: [
               'Decentralized verification and systematic skill evaluation',
               'Static manual filing without digital signatures',
@@ -422,7 +423,7 @@ export const Index: React.FC = () => {
             correct: 0,
           },
           {
-            q: 'How does AcademiaEdu safeguard assessment integrity?',
+            q: 'How does AcademiaEdu safeguard institutional credential integrity?',
             options: [
               'Air-gapped server-side grading with HMAC SHA-256 proof minting',
               'Storing answers in plaintext localStorage variables',
@@ -442,7 +443,7 @@ export const Index: React.FC = () => {
     setGradingResult(null);
   };
 
-  // Submit and Grade Assessment
+  // Submit and Grade Evaluation
   const handleQuizSubmit = () => {
     if (!activeQuizItem) return;
     setLoadingSubmission(true);
@@ -460,7 +461,6 @@ export const Index: React.FC = () => {
       setGradingResult({ score, total, percentage, passed });
       setLoadingSubmission(false);
 
-      // On passing, update the related course progress dynamically
       if (passed) {
         setCourses((prev) =>
           prev.map((c) => {
@@ -477,7 +477,7 @@ export const Index: React.FC = () => {
     }, 350);
   };
 
-  // Module Authoring Callback
+  // Authoring Callbacks
   const handleModuleCreated = (newMod: any) => {
     const newCourseItem: CourseItem = {
       id: Date.now(),
@@ -506,7 +506,6 @@ export const Index: React.FC = () => {
     setCreateModuleOpen(false);
   };
 
-  // Quiz Authoring Callback
   const handleQuizCreated = (newQuiz: any) => {
     const formatted: AssessmentItem = {
       id: `quiz-${Date.now()}`,
@@ -515,15 +514,16 @@ export const Index: React.FC = () => {
       questionsCount: newQuiz.questions?.length || 2,
       passingScore: newQuiz.passingScore || 70,
       duration: `${(newQuiz.questions?.length || 2) * 5} min`,
-      questions: newQuiz.questions && newQuiz.questions.length > 0
-        ? newQuiz.questions
-        : [
-            {
-              q: 'What is the primary validation criteria for this module?',
-              options: ['Meeting institutional passing score', 'Bypassing questions', 'Skipping reading', 'Exiting test'],
-              correct: 0,
-            },
-          ],
+      questions:
+        newQuiz.questions && newQuiz.questions.length > 0
+          ? newQuiz.questions
+          : [
+              {
+                q: 'What is the primary validation criteria for this module?',
+                options: ['Meeting institutional passing score', 'Bypassing questions', 'Skipping reading', 'Exiting test'],
+                correct: 0,
+              },
+            ],
     };
 
     setAssessmentsList((prev) => [formatted, ...prev]);
@@ -535,9 +535,9 @@ export const Index: React.FC = () => {
     if (!q) return courses;
     return courses.filter(
       (c) =>
-        c.title.toLowerCase().includes(q) ||
-        c.code.toLowerCase().includes(q) ||
-        c.description.toLowerCase().includes(q)
+        (c.title || '').toLowerCase().includes(q) ||
+        (c.code || '').toLowerCase().includes(q) ||
+        (c.description || '').toLowerCase().includes(q)
     );
   }, [courses, searchQuery]);
 
@@ -555,7 +555,7 @@ export const Index: React.FC = () => {
     const raw = `${simCandidate}:${simScore}:${Date.now()}:SIH26075:ACADEMIAEDU`;
     let hash = 0;
     for (let i = 0; i < raw.length; i++) {
-      hash = (hash << 5) - hash + raw.charCodeAt(i);
+      hash = ((hash << 5) - hash) + raw.charCodeAt(i);
       hash |= 0;
     }
     const hex = Math.abs(hash).toString(16).padStart(8, '0');
@@ -787,11 +787,11 @@ export const Index: React.FC = () => {
   }
 
   // =========================================================================
-  // POST-LOGIN DISPLAY (DYNAMIC MODULES & CHECKPOINTS)
+  // POST-LOGIN DISPLAY (ADOPTED FROM INDEXREF.TXT WITH DYNAMIC SYNC)
   // =========================================================================
   return (
     <div className="min-h-screen bg-[#f6f8fc] dark:bg-[#070B14] text-slate-900 dark:text-slate-100 transition-colors duration-200 font-sans">
-      {/* Global Header */}
+      {/* Global Workspace Header */}
       <header className="sticky top-0 z-30 border-b border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-[#0B101E]/90 backdrop-blur-xl shadow-xs">
         <div className="mx-auto flex h-[72px] max-w-[1440px] items-center gap-5 px-4 sm:px-7 lg:px-10">
           <button
@@ -804,7 +804,7 @@ export const Index: React.FC = () => {
 
           <AcademiaLogo size={34} />
 
-          {/* Search Bar */}
+          {/* Search Input */}
           <div className="relative ml-4 hidden max-w-[370px] flex-1 md:block">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={17} />
             <input
@@ -876,9 +876,9 @@ export const Index: React.FC = () => {
         </div>
       </header>
 
-      {/* Workspace Sidebar & Main Grid */}
+      {/* Main Workspace Frame */}
       <div className="mx-auto flex max-w-[1440px]">
-        {/* Responsive Sidebar */}
+        {/* Workspace Sidebar */}
         <aside
           className={`${
             mobileNav ? 'fixed inset-y-[72px] left-0 z-20 flex' : 'hidden'
@@ -971,10 +971,10 @@ export const Index: React.FC = () => {
           </div>
         </aside>
 
-        {/* Dynamic Display Area */}
+        {/* Dynamic Main Pane */}
         <main className="min-w-0 flex-1 px-4 py-7 sm:px-7 lg:px-10 lg:py-9">
           <div className="mx-auto max-w-[1120px]">
-            {/* Context Hero */}
+            {/* Header Identity Bar */}
             <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
                 <div className="flex items-center gap-2">
@@ -1164,7 +1164,7 @@ export const Index: React.FC = () => {
                           <div
                             key={m.id}
                             onClick={() => {
-                              setActiveViewerModule(m);
+                              setActiveViewerModule({ ...m, courseTitle: c.title });
                               setViewerModalOpen(true);
                             }}
                             className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-[#0B101E] hover:border-indigo-400 dark:hover:border-indigo-500 cursor-pointer transition"
@@ -1445,9 +1445,19 @@ export const Index: React.FC = () => {
             setViewerModalOpen(false);
             setActiveViewerModule(null);
           }}
-          onLaunchAssessment={(title) => {
+          onCompleteModule={(modId) => {
+            setCourses((prev) =>
+              prev.map((c) => {
+                if (c.modules.some((m) => m.id === modId)) {
+                  return { ...c, progress: 100 };
+                }
+                return c;
+              })
+            );
+          }}
+          onLaunchAssessment={(courseName) => {
             setViewerModalOpen(false);
-            handleStartAssessment(title);
+            handleStartAssessment(courseName);
           }}
         />
       )}
