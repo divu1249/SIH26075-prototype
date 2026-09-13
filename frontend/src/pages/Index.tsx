@@ -229,7 +229,7 @@ const INITIAL_ASSESSMENTS: AssessmentItem[] = [
         correct: 0,
       },
       {
-        q: 'Which stakeholder engagement method produces highest grassroots feedback yield?',
+        q: 'Which stakeholder engagement method produces the highest grassroots feedback yield?',
         options: [
           'Anonymous cold surveys',
           'Participatory Action Research (PAR)',
@@ -270,7 +270,7 @@ const INITIAL_ASSESSMENTS: AssessmentItem[] = [
 export const Index: React.FC = () => {
   const { user, login, logout, theme, toggleTheme } = useAuth();
 
-  // Workspace Navigation & Controls
+  // Navigation & View States
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>('overview');
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileNav, setMobileNav] = useState(false);
@@ -281,24 +281,22 @@ export const Index: React.FC = () => {
   const [assessmentsList, setAssessmentsList] = useState<AssessmentItem[]>(INITIAL_ASSESSMENTS);
   const [loadingSubmission, setLoadingSubmission] = useState(false);
 
-  // Modals & Panels
+  // Modals & Overlays
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showArchModal, setShowArchModal] = useState(false);
   const [showSimulatorModal, setShowSimulatorModal] = useState(false);
   const [createModuleOpen, setCreateModuleOpen] = useState(false);
   const [createQuizOpen, setCreateQuizOpen] = useState(false);
-
-  // Certificate Modal State
   const [certModalOpen, setCertModalOpen] = useState(false);
   const [activeCertModule, setActiveCertModule] = useState('');
   const [certScore, setCertScore] = useState(100);
 
-  // Module Viewer Modal State
+  // Dynamic Lesson Viewer State
   const [viewerModalOpen, setViewerModalOpen] = useState(false);
   const [activeViewerModule, setActiveViewerModule] = useState<any>(null);
 
-  // Interactive Quiz Engine State
+  // Dynamic Quiz Engine State
   const [activeQuizItem, setActiveQuizItem] = useState<AssessmentItem | null>(null);
   const [quizStep, setQuizStep] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
@@ -332,7 +330,7 @@ export const Index: React.FC = () => {
     },
   ];
 
-  // Pre-Login Simulator State
+  // Simulator State
   const [simCandidate, setSimCandidate] = useState('Aisha Verma');
   const [simScore, setSimScore] = useState(88);
   const [simulatedHash, setSimulatedHash] = useState('');
@@ -363,7 +361,7 @@ export const Index: React.FC = () => {
       .catch(() => console.log('Serving offline synchronized course catalog.'));
   }, [apiBaseUrl]);
 
-  // Derived User Identity
+  // Authenticated User Identity
   const displayName = useMemo(() => {
     if (!user) return 'Candidate';
     if ((user as any).fullName) return (user as any).fullName;
@@ -376,7 +374,7 @@ export const Index: React.FC = () => {
   const roleDisplay = rawRole.charAt(0).toUpperCase() + rawRole.slice(1);
   const institutionDisplay = (user as any)?.institution || 'AcademiaEdu Central Node';
 
-  // Dynamic Course Reader Launcher
+  // Dynamic Course & Module Viewer Launcher
   const handleOpenCourseReader = (course: CourseItem) => {
     const targetModule = course.modules?.[0] || {
       id: course.id,
@@ -384,7 +382,7 @@ export const Index: React.FC = () => {
       courseTitle: course.title,
       description: course.description,
       duration_minutes: 45,
-      content: `# ${course.title}\n\n${course.description}`,
+      content: `# ${course.title}\n\n${course.description}\n\n### Curriculum Outline\nReview each lesson thoroughly before launching the evaluation checkpoint.`,
       order_index: 1,
       completed: course.progress === 100,
     };
@@ -392,7 +390,7 @@ export const Index: React.FC = () => {
     setViewerModalOpen(true);
   };
 
-  // Dynamic Assessment Checkpoint Launcher
+  // Dynamic Assessment Launcher
   const handleStartAssessment = (moduleOrCourseTitle: string) => {
     const matched = assessmentsList.find(
       (a) =>
@@ -413,7 +411,7 @@ export const Index: React.FC = () => {
         duration: '10 min',
         questions: [
           {
-            q: `What is the primary technical objective of ${moduleOrCourseTitle}?`,
+            q: `What is the core technical outcome of ${moduleOrCourseTitle}?`,
             options: [
               'Decentralized verification and systematic skill evaluation',
               'Static manual filing without digital signatures',
@@ -423,7 +421,7 @@ export const Index: React.FC = () => {
             correct: 0,
           },
           {
-            q: 'How does AcademiaEdu safeguard institutional credential integrity?',
+            q: 'How does AcademiaEdu safeguard assessment integrity?',
             options: [
               'Air-gapped server-side grading with HMAC SHA-256 proof minting',
               'Storing answers in plaintext localStorage variables',
@@ -443,7 +441,7 @@ export const Index: React.FC = () => {
     setGradingResult(null);
   };
 
-  // Submit and Grade Evaluation
+  // Submit and Grade Assessment
   const handleQuizSubmit = () => {
     if (!activeQuizItem) return;
     setLoadingSubmission(true);
@@ -477,7 +475,7 @@ export const Index: React.FC = () => {
     }, 350);
   };
 
-  // Authoring Callbacks
+  // Module Authoring Callback
   const handleModuleCreated = (newMod: any) => {
     const newCourseItem: CourseItem = {
       id: Date.now(),
@@ -506,6 +504,7 @@ export const Index: React.FC = () => {
     setCreateModuleOpen(false);
   };
 
+  // Quiz Authoring Callback
   const handleQuizCreated = (newQuiz: any) => {
     const formatted: AssessmentItem = {
       id: `quiz-${Date.now()}`,
@@ -787,7 +786,7 @@ export const Index: React.FC = () => {
   }
 
   // =========================================================================
-  // POST-LOGIN DISPLAY (ADOPTED FROM INDEXREF.TXT WITH DYNAMIC SYNC)
+  // POST-LOGIN DISPLAY
   // =========================================================================
   return (
     <div className="min-h-screen bg-[#f6f8fc] dark:bg-[#070B14] text-slate-900 dark:text-slate-100 transition-colors duration-200 font-sans">
@@ -1441,6 +1440,7 @@ export const Index: React.FC = () => {
         <CourseViewerModal
           isOpen={viewerModalOpen}
           module={activeViewerModule}
+          course={activeViewerModule}
           onClose={() => {
             setViewerModalOpen(false);
             setActiveViewerModule(null);
