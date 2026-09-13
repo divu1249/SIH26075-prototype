@@ -304,3 +304,6 @@ export function AnalyticsView({ user, onViewCertificate }: AnalyticsViewProps) {
     </div>
   );
 }
+
+export default AnalyticsView;
+// or: export { AnalyticsView };

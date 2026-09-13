@@ -231,3 +231,5 @@ export function AdminConsole() {
     </div>
   );
 }
+export default AdminConsole;
+// or: export { AdminConsole };
