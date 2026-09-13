@@ -16,7 +16,13 @@ import {
   Search,
   Settings2,
   Sparkles,
+  Star,
+  Upload,
+  Megaphone,
+  UserCheck,
+  FileText,
   X,
+  ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import AcademiaLogo from '../components/AcademiaLogo';
@@ -27,6 +33,10 @@ import AdminConsole from '../components/AdminConsole';
 import AnalyticsView from '../components/AnalyticsView';
 import CreateModuleModal from '../components/CreateModuleModal';
 import CreateQuizModal from '../components/CreateQuizModal';
+import TrainerProfileModal, { TrainerCompetency } from '../components/TrainerProfileModal';
+import FeedbackModal from '../components/FeedbackModal';
+import UploadResourceModal from '../components/UploadResourceModal';
+import AnnouncementsModal from '../components/AnnouncementsModal';
 
 type WorkspaceTab = 'overview' | 'learning' | 'assessments' | 'progress';
 
@@ -66,8 +76,48 @@ interface CourseItem {
   color: string;
   description: string;
   progress: number;
+  enrolled: boolean;
   modules: LessonModule[];
 }
+
+const TRAINER_PROFILES: Record<string, TrainerCompetency> = {
+  'Prof. Aarav Mehta': {
+    name: 'Prof. Aarav Mehta',
+    designation: 'Principal Pedagogical Architect',
+    institution: 'IIT Delhi • Department of Computer Science',
+    experienceYears: 12,
+    rating: 4.9,
+    verified: true,
+    skills: ['Microservices', 'FastAPI', 'Distributed Systems', 'Data Structures', 'RBAC Security'],
+    bio: 'Pioneering decentralized capacity building and air-gapped evaluation systems for national vocational education cohorts.',
+    publishedCoursesCount: 6,
+    accreditationPassRate: '94.2%',
+  },
+  'Dr. Nia Okafor': {
+    name: 'Dr. Nia Okafor',
+    designation: 'Senior Outreach Specialist',
+    institution: 'National Capacity Network',
+    experienceYears: 9,
+    rating: 4.8,
+    verified: true,
+    skills: ['Community Mapping', 'Participatory Action Research (PAR)', 'Public Sector Governance'],
+    bio: 'Dedicated to grassroots skill acquisition, institutional outreach mapping, and scalable stakeholder feedback workflows.',
+    publishedCoursesCount: 4,
+    accreditationPassRate: '91.8%',
+  },
+  'Liam Chen': {
+    name: 'Liam Chen',
+    designation: 'Lead Data Strategist',
+    institution: 'Apex Learning Analytics Lab',
+    experienceYears: 8,
+    rating: 4.9,
+    verified: true,
+    skills: ['Statistical Inference', 'Predictive Modeling', 'Anomaly Detection', 'Cohort Telemetry'],
+    bio: 'Specializing in learner retention algorithms, statistical score variance, and server-side autograding pipelines.',
+    publishedCoursesCount: 5,
+    accreditationPassRate: '96.0%',
+  },
+};
 
 const INITIAL_COURSES: CourseItem[] = [
   {
@@ -80,13 +130,14 @@ const INITIAL_COURSES: CourseItem[] = [
     color: 'from-blue-600 to-indigo-500',
     description: 'Foundational computer architecture, operating system security, and decentralized networking principles.',
     progress: 66,
+    enrolled: true,
     modules: [
       {
         id: 101,
         title: 'Decentralized Architecture & Ledger Baselines',
         description: 'P2P protocol communication, cryptographic verification, and state trees.',
         duration_minutes: 25,
-        content: '# Decentralized Architecture & Ledger Baselines\n\nUnderstand the architectural difference between monolithic centralized repositories and decentralized state verifiers.\n\n### Core Pillars\n- **Stateless Validation**: Verify identity proofs without holding master session registries.\n- **Cryptographic Trust**: Rely on SHA-256 digest chains rather than client claims.\n- **High-Throughput Verification**: Non-blocking asynchronous checks.',
+        content: '# Decentralized Architecture\n\nUnderstand stateless verification and HMAC SHA-256 integrity models.',
         order_index: 1,
         completed: true,
       },
@@ -95,7 +146,7 @@ const INITIAL_COURSES: CourseItem[] = [
         title: 'Role-Based Access Control (RBAC) Mechanics',
         description: 'Hierarchical permission scoping between Trainee, Trainer, and Central Governance nodes.',
         duration_minutes: 30,
-        content: '# Role-Based Access Control (RBAC)\n\nRBAC enforces mutual exclusivity between evaluation authoring and test execution.\n\n```json\n{\n  "trainee": ["read:curriculum", "submit:assessment"],\n  "trainer": ["create:module", "author:quiz", "view:telemetry"],\n  "admin": ["*"]\n}\n```',
+        content: '# RBAC Architecture\n\nEnforcing strict mutual exclusivity across evaluation authoring and test execution.',
         order_index: 2,
         completed: true,
       },
@@ -104,7 +155,7 @@ const INITIAL_COURSES: CourseItem[] = [
         title: 'Asynchronous API Orchestration & Non-Blocking I/O',
         description: 'High-throughput microservices using FastAPI and async worker event loops.',
         duration_minutes: 40,
-        content: '# High-Throughput Event Loops\n\nFastAPI leverages Python asyncio and Starlette to deliver concurrent task execution without thread starvation.',
+        content: '# FastAPI Asynchronous Event Loops\n\nNon-blocking concurrent I/O throughput to handle high-concurrency assessment submission bursts.',
         order_index: 3,
         completed: false,
       },
@@ -120,13 +171,14 @@ const INITIAL_COURSES: CourseItem[] = [
     color: 'from-emerald-500 to-teal-400',
     description: 'Frameworks for decentralized community mapping, public-sector stakeholder alignment, and outreach telemetry.',
     progress: 50,
+    enrolled: true,
     modules: [
       {
         id: 104,
         title: 'Participatory Community Mapping Protocols',
         description: 'Synthesizing qualitative community metrics into structured actionable blueprints.',
         duration_minutes: 35,
-        content: '# Community Asset Mapping\n\nAsset mapping catalogues institutional capacities, talent distribution, and infrastructure gaps to optimize resource delivery.',
+        content: '# Asset Mapping\n\nCataloging localized competencies to optimize resource delivery.',
         order_index: 1,
         completed: true,
       },
@@ -135,7 +187,7 @@ const INITIAL_COURSES: CourseItem[] = [
         title: 'Grassroots Feedback Loops & Continuous Governance',
         description: 'Closed-loop iteration systems driven by verified participant feedback.',
         duration_minutes: 45,
-        content: '# Iterative Feedback Systems\n\nEstablishing continuous feedback pipelines to refine vocational curricula based on industry demand.',
+        content: '# Feedback Infrastructure\n\nTranslating post-test feedback into continuous curriculum refinements.',
         order_index: 2,
         completed: false,
       },
@@ -151,6 +203,7 @@ const INITIAL_COURSES: CourseItem[] = [
     color: 'from-violet-500 to-fuchsia-500',
     description: 'Statistical inference, metric extraction, and predictive dropout modeling across institutional cohorts.',
     progress: 100,
+    enrolled: false,
     modules: [
       {
         id: 106,
@@ -229,7 +282,7 @@ const INITIAL_ASSESSMENTS: AssessmentItem[] = [
         correct: 0,
       },
       {
-        q: 'Which stakeholder engagement method produces the highest grassroots feedback yield?',
+        q: 'Which stakeholder engagement method produces highest grassroots feedback yield?',
         options: [
           'Anonymous cold surveys',
           'Participatory Action Research (PAR)',
@@ -240,63 +293,57 @@ const INITIAL_ASSESSMENTS: AssessmentItem[] = [
       },
     ],
   },
-  {
-    id: 'quiz-3',
-    title: 'Data Strategy & Forecasting Evaluation',
-    module: 'Data-Informed Decision Making',
-    questionsCount: 2,
-    passingScore: 70,
-    duration: '12 min',
-    questions: [
-      {
-        q: 'Which metric measures the dispersion of training progress across cohort learners?',
-        options: ['Standard Deviation', 'Median Index', 'Throughput Ceiling', 'Static Bias'],
-        correct: 0,
-      },
-      {
-        q: 'How does anomaly detection prevent false positives in cohort drop-out signals?',
-        options: [
-          'By comparing rolling performance against historical confidence intervals',
-          'By removing all low-scoring records',
-          'By hardcoding a 50% pass threshold',
-          'By purging uncompleted tests',
-        ],
-        correct: 0,
-      },
-    ],
-  },
 ];
 
 export const Index: React.FC = () => {
   const { user, login, logout, theme, toggleTheme } = useAuth();
 
-  // Navigation & View States
+  // Navigation & View State
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>('overview');
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileNav, setMobileNav] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
-  // Dynamic Stores
+  // Dynamic Content Stores
   const [courses, setCourses] = useState<CourseItem[]>(INITIAL_COURSES);
   const [assessmentsList, setAssessmentsList] = useState<AssessmentItem[]>(INITIAL_ASSESSMENTS);
   const [loadingSubmission, setLoadingSubmission] = useState(false);
 
-  // Modals & Overlays
+  // SIH 26075 Governance Data (Slide 2 & 4)
+  const [announcements, setAnnouncements] = useState([
+    { id: 1, title: 'SIH 26075 Nationwide Accreditation Window Active', date: 'Sept 2026', author: 'Root Governance' },
+    { id: 2, title: 'Decentralized Microservices Track Published by Faculty', date: 'Sept 2026', author: 'Technical Board' },
+  ]);
+  const [pendingTrainers, setPendingTrainers] = useState([
+    { id: 201, name: 'Dr. Kabir Sen', institution: 'IIT Bombay', domain: 'Cloud Security', status: 'Pending Approval' },
+    { id: 202, name: 'Prof. Sunita Rao', institution: 'NIT Trichy', domain: 'Edge AI Systems', status: 'Pending Approval' },
+  ]);
+
+  // Global Modals
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showArchModal, setShowArchModal] = useState(false);
   const [showSimulatorModal, setShowSimulatorModal] = useState(false);
   const [createModuleOpen, setCreateModuleOpen] = useState(false);
   const [createQuizOpen, setCreateQuizOpen] = useState(false);
+
+  // SIH Specific Modals
+  const [activeTrainerProfile, setActiveTrainerProfile] = useState<TrainerCompetency | null>(null);
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+  const [activeFeedbackCourse, setActiveFeedbackCourse] = useState<{ title: string; instructor: string } | null>(null);
+  const [uploadResourceOpen, setUploadResourceOpen] = useState(false);
+  const [announcementsModalOpen, setAnnouncementsModalOpen] = useState(false);
+
+  // Certificate Modal State
   const [certModalOpen, setCertModalOpen] = useState(false);
   const [activeCertModule, setActiveCertModule] = useState('');
   const [certScore, setCertScore] = useState(100);
 
-  // Dynamic Lesson Viewer State
+  // Lesson Viewer Modal State
   const [viewerModalOpen, setViewerModalOpen] = useState(false);
   const [activeViewerModule, setActiveViewerModule] = useState<any>(null);
 
-  // Dynamic Quiz Engine State
+  // Quiz Engine State
   const [activeQuizItem, setActiveQuizItem] = useState<AssessmentItem | null>(null);
   const [quizStep, setQuizStep] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
@@ -311,28 +358,28 @@ export const Index: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = [
     {
-      badge: 'SIH 26075 Architectural Specification',
-      title: 'Decentralized Capacity Building Engine',
-      desc: 'Institutional platform providing isolated role-segregated learning tracks, tamper-resistant checkpoints, and cryptographically verified qualifications.',
+      badge: 'Smart India Hackathon 2026 • Problem Statement SIH 26075',
+      title: 'CAPACITY CONNECT: Unified Digital Capacity Building Portal',
+      desc: 'Centralized web portal addressing scattered learning resources, unverified trainer credentials, and lack of tracked learner progress (Team Techtonic).',
       icon: '🏛️',
     },
     {
-      badge: 'Anti-Tampering Integrity',
-      title: 'Server-Side Air-Gapped Evaluation',
-      desc: 'All assessment submissions are graded backend-side against isolated question vectors, preventing client inspection and synthetic credential minting.',
-      icon: '🛡️',
+      badge: 'Competitive Differentiator (Slide 6)',
+      title: 'Learner-Visible Trainer Competency Profiles',
+      desc: 'Transparent verification of faculty qualifications, domain experience, and accreditation rates before course selection.',
+      icon: '⭐',
     },
     {
-      badge: 'Cryptographic Provenance',
-      title: 'HMAC SHA-256 Verifiable Accreditation',
-      desc: 'Successful completions mint immutable 64-character hash signatures stamped with institutional timestamps for instantaneous 3rd-party validation.',
+      badge: 'Cryptographic Provenance (Slide 3)',
+      title: 'Air-Gapped Grading & HMAC SHA-256 Credentials',
+      desc: 'Tamper-resistant server-side assessment autograding minting immutable cryptographic digests registered to institutional profiles.',
       icon: '🔐',
     },
   ];
 
   // Simulator State
-  const [simCandidate, setSimCandidate] = useState('Aisha Verma');
-  const [simScore, setSimScore] = useState(88);
+  const [simCandidate, setSimCandidate] = useState('Divyansh Chauhan');
+  const [simScore, setSimScore] = useState(92);
   const [simulatedHash, setSimulatedHash] = useState('');
 
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://academia-prototype.onrender.com';
@@ -358,10 +405,10 @@ export const Index: React.FC = () => {
           );
         }
       })
-      .catch(() => console.log('Serving offline synchronized course catalog.'));
+      .catch(() => console.log('Serving local synchronized Capacity Connect catalog.'));
   }, [apiBaseUrl]);
 
-  // Authenticated User Identity
+  // Derived User Identity
   const displayName = useMemo(() => {
     if (!user) return 'Candidate';
     if ((user as any).fullName) return (user as any).fullName;
@@ -372,17 +419,24 @@ export const Index: React.FC = () => {
 
   const rawRole = (user?.role || 'trainee').toLowerCase();
   const roleDisplay = rawRole.charAt(0).toUpperCase() + rawRole.slice(1);
-  const institutionDisplay = (user as any)?.institution || 'AcademiaEdu Central Node';
+  const institutionDisplay = (user as any)?.institution || 'Capacity Connect Central Node';
 
-  // Dynamic Course & Module Viewer Launcher
+  // Course Enrollment Handler (Slide 2: Trainee -> Enroll)
+  const handleToggleEnroll = (courseId: number) => {
+    setCourses((prev) =>
+      prev.map((c) => (c.id === courseId ? { ...c, enrolled: !c.enrolled } : c))
+    );
+  };
+
+  // Dynamic Course Reader Launcher
   const handleOpenCourseReader = (course: CourseItem) => {
     const targetModule = course.modules?.[0] || {
       id: course.id,
-      title: `${course.title} — Comprehensive Overview`,
+      title: `${course.title} — Unit 1`,
       courseTitle: course.title,
       description: course.description,
       duration_minutes: 45,
-      content: `# ${course.title}\n\n${course.description}\n\n### Curriculum Outline\nReview each lesson thoroughly before launching the evaluation checkpoint.`,
+      content: `# ${course.title}\n\n${course.description}`,
       order_index: 1,
       completed: course.progress === 100,
     };
@@ -390,7 +444,7 @@ export const Index: React.FC = () => {
     setViewerModalOpen(true);
   };
 
-  // Dynamic Assessment Launcher
+  // Launch Assessment Checkpoint
   const handleStartAssessment = (moduleOrCourseTitle: string) => {
     const matched = assessmentsList.find(
       (a) =>
@@ -404,29 +458,29 @@ export const Index: React.FC = () => {
     } else {
       const dynamicQuiz: AssessmentItem = {
         id: `quiz-dyn-${Date.now()}`,
-        title: `${moduleOrCourseTitle} Checkpoint`,
+        title: `${moduleOrCourseTitle} Evaluation`,
         module: moduleOrCourseTitle,
         questionsCount: 2,
         passingScore: 70,
         duration: '10 min',
         questions: [
           {
-            q: `What is the core technical outcome of ${moduleOrCourseTitle}?`,
+            q: `What is the primary technical objective of ${moduleOrCourseTitle}?`,
             options: [
-              'Decentralized verification and systematic skill evaluation',
-              'Static manual filing without digital signatures',
-              'Purging audit logs after every execution',
+              'Standardized competence development and verifiable skills acquisition',
+              'Static manual filing without digital tracking',
+              'Purging evaluation logs after execution',
               'Disabling server-side assessment checks',
             ],
             correct: 0,
           },
           {
-            q: 'How does AcademiaEdu safeguard assessment integrity?',
+            q: 'How does Capacity Connect guarantee credential validity?',
             options: [
-              'Air-gapped server-side grading with HMAC SHA-256 proof minting',
-              'Storing answers in plaintext localStorage variables',
-              'Client-side HTML inspect evaluation',
-              'Allowing unauthenticated grade updates',
+              'Immutable HMAC SHA-256 cryptographic signatures tied to candidate public identities',
+              'Plaintext unencrypted client storage',
+              'Unverified manual self-attestation',
+              'Editable frontend evaluation states',
             ],
             correct: 0,
           },
@@ -441,7 +495,7 @@ export const Index: React.FC = () => {
     setGradingResult(null);
   };
 
-  // Submit and Grade Assessment
+  // Submit and Grade Evaluation
   const handleQuizSubmit = () => {
     if (!activeQuizItem) return;
     setLoadingSubmission(true);
@@ -475,7 +529,12 @@ export const Index: React.FC = () => {
     }, 350);
   };
 
-  // Module Authoring Callback
+  // Admin Trainer Approval Action (Slide 2 & 4: Admin -> Approve Users)
+  const handleApproveTrainer = (trainerId: number) => {
+    setPendingTrainers((prev) => prev.filter((t) => t.id !== trainerId));
+  };
+
+  // Authoring Callbacks
   const handleModuleCreated = (newMod: any) => {
     const newCourseItem: CourseItem = {
       id: Date.now(),
@@ -487,6 +546,7 @@ export const Index: React.FC = () => {
       color: 'from-cyan-600 to-blue-500',
       description: newMod.description || 'Newly authored institutional curriculum module.',
       progress: 0,
+      enrolled: true,
       modules: [
         {
           id: Date.now() + 1,
@@ -504,7 +564,6 @@ export const Index: React.FC = () => {
     setCreateModuleOpen(false);
   };
 
-  // Quiz Authoring Callback
   const handleQuizCreated = (newQuiz: any) => {
     const formatted: AssessmentItem = {
       id: `quiz-${Date.now()}`,
@@ -513,16 +572,13 @@ export const Index: React.FC = () => {
       questionsCount: newQuiz.questions?.length || 2,
       passingScore: newQuiz.passingScore || 70,
       duration: `${(newQuiz.questions?.length || 2) * 5} min`,
-      questions:
-        newQuiz.questions && newQuiz.questions.length > 0
-          ? newQuiz.questions
-          : [
-              {
-                q: 'What is the primary validation criteria for this module?',
-                options: ['Meeting institutional passing score', 'Bypassing questions', 'Skipping reading', 'Exiting test'],
-                correct: 0,
-              },
-            ],
+      questions: newQuiz.questions?.length > 0 ? newQuiz.questions : [
+        {
+          q: 'What is the primary validation criteria for this module?',
+          options: ['Meeting passing score threshold', 'Bypassing questions', 'Skipping reading', 'Exiting test'],
+          correct: 0,
+        },
+      ],
     };
 
     setAssessmentsList((prev) => [formatted, ...prev]);
@@ -536,22 +592,23 @@ export const Index: React.FC = () => {
       (c) =>
         (c.title || '').toLowerCase().includes(q) ||
         (c.code || '').toLowerCase().includes(q) ||
+        (c.instructor || '').toLowerCase().includes(q) ||
         (c.description || '').toLowerCase().includes(q)
     );
   }, [courses, searchQuery]);
 
   const quickDemoLogin = (role: 'trainee' | 'trainer' | 'admin') => {
     if (role === 'trainee') {
-      login('demo-token-trainee', { id: 101, name: 'Aisha Verma', email: 'aisha@connect.edu', role: 'trainee' });
+      login('demo-token-trainee', { id: 101, name: 'Divyansh Chauhan', email: 'divyansh@connect.edu', role: 'trainee' });
     } else if (role === 'trainer') {
-      login('demo-token-trainer', { id: 102, name: 'Prof. Aarav Sharma', email: 'aarav@connect.edu', role: 'trainer' });
+      login('demo-token-trainer', { id: 102, name: 'Prof. Aarav Mehta', email: 'aarav@connect.edu', role: 'trainer' });
     } else {
-      login('demo-token-admin', { id: 103, name: 'Central Registry Root', email: 'admin.root@capacityconnect.gov', role: 'admin' });
+      login('demo-token-admin', { id: 103, name: 'Team Techtonic Admin', email: 'admin.root@capacityconnect.gov', role: 'admin' });
     }
   };
 
   const handleSimulateHash = () => {
-    const raw = `${simCandidate}:${simScore}:${Date.now()}:SIH26075:ACADEMIAEDU`;
+    const raw = `${simCandidate}:${simScore}:${Date.now()}:SIH26075:CAPACITYCONNECT`;
     let hash = 0;
     for (let i = 0; i < raw.length; i++) {
       hash = ((hash << 5) - hash) + raw.charCodeAt(i);
@@ -562,7 +619,7 @@ export const Index: React.FC = () => {
   };
 
   // =========================================================================
-  // PRE-LOGIN DISPLAY
+  // PRE-LOGIN DISPLAY (TEAM TECHTONIC • SIH 26075 SPECIFICATION)
   // =========================================================================
   if (!user) {
     return (
@@ -595,13 +652,13 @@ export const Index: React.FC = () => {
           <div className="text-center max-w-3xl mx-auto space-y-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-800/80 text-indigo-300 text-xs font-bold shadow-lg">
               <span className="w-2 h-2 rounded-full bg-indigo-400 animate-ping" />
-              <span>Smart India Hackathon 2026 • Problem Statement SIH 26075</span>
+              <span>Smart India Hackathon 2026 • Problem Statement SIH 26075 • Team Techtonic</span>
             </div>
             <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-tight">
-              Decentralized Capacity Building & Verifiable Accreditation
+              CAPACITY CONNECT: Digital Capacity Building & LMS Portal
             </h1>
             <p className="text-base sm:text-lg text-slate-400 leading-relaxed max-w-2xl mx-auto">
-              An institutional training architecture enabling dynamic curriculum authoring, tamper-resistant server-side grading, and cryptographic qualification proofs.
+              A unified digital ecosystem supporting organizational training, transparent trainer competency mapping, auto-graded assessments, and cryptographic qualifications.
             </p>
             <div className="pt-2 flex flex-wrap justify-center gap-4">
               <button
@@ -620,7 +677,7 @@ export const Index: React.FC = () => {
                 onClick={() => setShowSimulatorModal(true)}
                 className="px-6 py-3 rounded-xl font-bold border border-cyan-800/70 bg-cyan-950/30 text-cyan-300 hover:bg-cyan-950/60 transition"
               >
-                Interactive Hash Simulator ⚙
+                Live Hash Simulator ⚙
               </button>
             </div>
           </div>
@@ -657,6 +714,7 @@ export const Index: React.FC = () => {
             </div>
           </div>
 
+          {/* 1-Click Persona Demonstrators for Presentation Evaluators */}
           <div className="p-8 rounded-3xl border border-slate-800/80 bg-[#0E1526]/80 shadow-2xl space-y-6">
             <div>
               <h3 className="text-xl font-bold tracking-tight">Evaluator Instant Gateway</h3>
@@ -666,10 +724,10 @@ export const Index: React.FC = () => {
               <div className="p-5 rounded-2xl border border-slate-800 bg-slate-900/90 flex flex-col justify-between space-y-4">
                 <div>
                   <span className="text-[10px] font-black uppercase tracking-wider text-indigo-400 bg-indigo-950/80 px-2 py-0.5 rounded border border-indigo-800/50">
-                    Trainee Candidate
+                    Trainee Persona
                   </span>
-                  <h4 className="font-bold text-base mt-2">Aisha Verma</h4>
-                  <p className="text-xs text-slate-400 mt-1">Interactive modules, quiz checkpoints & SHA-256 certificate collection.</p>
+                  <h4 className="font-bold text-base mt-2">Divyansh Chauhan</h4>
+                  <p className="text-xs text-slate-400 mt-1">Find & enroll, view trainer competency, take tests, mint certificates, and submit feedback.</p>
                 </div>
                 <button
                   onClick={() => quickDemoLogin('trainee')}
@@ -682,10 +740,10 @@ export const Index: React.FC = () => {
               <div className="p-5 rounded-2xl border border-slate-800 bg-slate-900/90 flex flex-col justify-between space-y-4">
                 <div>
                   <span className="text-[10px] font-black uppercase tracking-wider text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/50">
-                    Trainer Instructor
+                    Trainer Persona
                   </span>
-                  <h4 className="font-bold text-base mt-2">Prof. Aarav Sharma</h4>
-                  <p className="text-xs text-slate-400 mt-1">Curriculum authoring studio, quiz editor & cohort telemetry analytics.</p>
+                  <h4 className="font-bold text-base mt-2">Prof. Aarav Mehta</h4>
+                  <p className="text-xs text-slate-400 mt-1">Manage training tracks, upload multi-format resources (PDF/Video/Link), author checkpoints, and monitor cohorts.</p>
                 </div>
                 <button
                   onClick={() => quickDemoLogin('trainer')}
@@ -698,10 +756,10 @@ export const Index: React.FC = () => {
               <div className="p-5 rounded-2xl border border-slate-800 bg-slate-900/90 flex flex-col justify-between space-y-4">
                 <div>
                   <span className="text-[10px] font-black uppercase tracking-wider text-purple-400 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-800/50">
-                    Institutional Admin
+                    Admin Persona
                   </span>
                   <h4 className="font-bold text-base mt-2">Central Root Authority</h4>
-                  <p className="text-xs text-slate-400 mt-1">Audit trail ledger, node verification & global governance rules.</p>
+                  <p className="text-xs text-slate-400 mt-1">Approve pending trainer applications, dispatch institutional announcements, and monitor central telemetry.</p>
                 </div>
                 <button
                   onClick={() => quickDemoLogin('admin')}
@@ -718,17 +776,21 @@ export const Index: React.FC = () => {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
             <div className="bg-[#0E1526] border border-slate-800 rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
               <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 className="font-bold text-lg">Platform Architecture Blueprint</h3>
+                <h3 className="font-bold text-lg">Capacity Connect Architecture Blueprint (Slide 3)</h3>
                 <button onClick={() => setShowArchModal(false)} className="text-slate-400 hover:text-white font-bold">✕</button>
               </div>
               <div className="space-y-4 text-xs text-slate-400 leading-relaxed font-mono">
                 <div className="p-4 rounded-xl bg-[#0B101E] border border-slate-800">
                   <div className="text-indigo-400 font-bold mb-1">[Frontend Tier: React + Vite + Tailwind]</div>
-                  Stateless client interface communicating via Bearer JWT with zero client-side evaluation secrets.
+                  Stateless interface interacting via OAuth2 Bearer JWT. Zero client evaluation secrets.
                 </div>
                 <div className="p-4 rounded-xl bg-[#0B101E] border border-slate-800">
-                  <div className="text-cyan-400 font-bold mb-1">[Backend Engine: FastAPI + OAuth2 + SQLAlchemy]</div>
-                  Server-side scoring routines and SHA-256 HMAC digital signature minting hosted on Render.
+                  <div className="text-cyan-400 font-bold mb-1">[Backend Engine: FastAPI + SQLAlchemy + PostgreSQL]</div>
+                  Asynchronous autograding engine & HMAC SHA-256 digital certificate stamping.
+                </div>
+                <div className="p-4 rounded-xl bg-[#0B101E] border border-slate-800">
+                  <div className="text-emerald-400 font-bold mb-1">[Differentiator: Trainer Competency Matching]</div>
+                  Peer-reviewed trainer profiles & verified institutional skill accreditation mapping.
                 </div>
               </div>
               <button onClick={() => setShowArchModal(false)} className="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs">
@@ -779,18 +841,18 @@ export const Index: React.FC = () => {
 
         {authModalOpen && <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />}
         <footer className="border-t border-slate-800/80 py-6 px-6 text-center text-xs text-slate-500">
-          AcademiaEdu • Smart India Hackathon 2026 • Problem Statement SIH 26075
+          Capacity Connect • Smart India Hackathon 2026 • Problem Statement SIH 26075 • Team Techtonic
         </footer>
       </div>
     );
   }
 
   // =========================================================================
-  // POST-LOGIN DISPLAY
+  // POST-LOGIN DISPLAY (COMPREHENSIVE MULTI-ROLE LMS WORKSPACE)
   // =========================================================================
   return (
     <div className="min-h-screen bg-[#f6f8fc] dark:bg-[#070B14] text-slate-900 dark:text-slate-100 transition-colors duration-200 font-sans">
-      {/* Global Workspace Header */}
+      {/* Global Header */}
       <header className="sticky top-0 z-30 border-b border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-[#0B101E]/90 backdrop-blur-xl shadow-xs">
         <div className="mx-auto flex h-[72px] max-w-[1440px] items-center gap-5 px-4 sm:px-7 lg:px-10">
           <button
@@ -809,7 +871,7 @@ export const Index: React.FC = () => {
             <input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search modules, skills, or curriculum..."
+              placeholder="Search courses, skills, or faculty..."
               className="h-10 w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/90 pl-10 pr-4 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition focus:border-blue-500 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-50 dark:focus:ring-indigo-950/30"
             />
           </div>
@@ -841,7 +903,7 @@ export const Index: React.FC = () => {
                   <span className="block text-xs font-bold text-slate-900 dark:text-white leading-tight">
                     {displayName}
                   </span>
-                  <span className="block text-[10px] font-medium text-slate-400 dark:text-slate-400 leading-tight">
+                  <span className="block text-[10px] font-medium text-slate-400 leading-tight">
                     <span className={`font-semibold ${rawRole === 'admin' ? 'text-amber-600 dark:text-amber-400' : 'text-blue-600 dark:text-indigo-400'}`}>
                       {roleDisplay}
                     </span>
@@ -875,9 +937,9 @@ export const Index: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Workspace Frame */}
+      {/* Main Workspace Grid */}
       <div className="mx-auto flex max-w-[1440px]">
-        {/* Workspace Sidebar */}
+        {/* Sidebar Navigation */}
         <aside
           className={`${
             mobileNav ? 'fixed inset-y-[72px] left-0 z-20 flex' : 'hidden'
@@ -885,12 +947,12 @@ export const Index: React.FC = () => {
         >
           <div className="mb-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 p-3.5">
             <p className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400">
-              {rawRole === 'admin' ? 'System Clearance' : 'Authenticated Registry'}
+              {rawRole === 'admin' ? 'Central Governance' : 'Authenticated Registry'}
             </p>
             <p className="mt-1 text-xs font-extrabold text-slate-900 dark:text-white truncate">{displayName}</p>
             <p className="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400 truncate">{institutionDisplay}</p>
             <p className="mt-1 text-[9px] font-mono text-slate-400 dark:text-slate-500 truncate">
-              ID: ACAD-{user.id || '9021'}
+              ID: CC-{user.id || '9021'}
             </p>
           </div>
 
@@ -941,7 +1003,7 @@ export const Index: React.FC = () => {
                   }`}
                 >
                   <FileCheck2 size={17} />
-                  {rawRole === 'trainer' ? 'Assessment Studio' : 'Assessments'}
+                  {rawRole === 'trainer' ? 'Question Bank Manager' : 'Assessments'}
                 </button>
                 <button
                   onClick={() => {
@@ -965,15 +1027,42 @@ export const Index: React.FC = () => {
             <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/20 text-blue-300">
               <Sparkles size={16} />
             </div>
-            <p className="text-xs font-bold">{roleDisplay} Domain Active</p>
-            <p className="mt-1 text-[10px] text-slate-400">Mutual exclusivity enforced by RBAC.</p>
+            <p className="text-xs font-bold">{roleDisplay} Tier Active</p>
+            <p className="mt-1 text-[10px] text-slate-400">Strict RBAC segregation enforced[cite: 2].</p>
           </div>
         </aside>
 
-        {/* Dynamic Main Pane */}
+        {/* Dynamic Display Area */}
         <main className="min-w-0 flex-1 px-4 py-7 sm:px-7 lg:px-10 lg:py-9">
           <div className="mx-auto max-w-[1120px]">
-            {/* Header Identity Bar */}
+            {/* Institutional Announcement Banner (Slide 2: Announcements) */}
+            {announcements.length > 0 && (
+              <div className="mb-6 p-4 rounded-2xl border border-indigo-200 dark:border-indigo-900/60 bg-gradient-to-r from-blue-50 via-indigo-50/50 to-white dark:from-indigo-950/40 dark:via-slate-900 dark:to-slate-900 flex items-center justify-between shadow-xs">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-xl bg-indigo-600 text-white shadow-xs">
+                    <Megaphone size={16} />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                      Central Announcement • {announcements[0].date}
+                    </span>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white mt-0.5">
+                      {announcements[0].title}
+                    </p>
+                  </div>
+                </div>
+                {rawRole === 'admin' && (
+                  <button
+                    onClick={() => setAnnouncementsModalOpen(true)}
+                    className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline shrink-0"
+                  >
+                    + Post New
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Context Hero Header */}
             <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
                 <div className="flex items-center gap-2">
@@ -984,24 +1073,31 @@ export const Index: React.FC = () => {
                         : 'bg-blue-50 dark:bg-indigo-950/60 text-blue-700 dark:text-indigo-300 border border-blue-200 dark:border-indigo-800/60'
                     }`}
                   >
-                    {roleDisplay} Console
+                    {roleDisplay} Workspace
                   </span>
                   <span className="text-xs font-medium text-slate-400">• {institutionDisplay}</span>
                 </div>
                 <h1 className="mt-2 text-[26px] font-extrabold tracking-tight text-slate-950 dark:text-white sm:text-[32px]">
                   {rawRole === 'trainee' && `Welcome back, ${displayName.split(' ')[0]}!`}
-                  {rawRole === 'trainer' && `Educator Workspace • ${displayName}`}
+                  {rawRole === 'trainer' && `Faculty Workspace • ${displayName}`}
                   {rawRole === 'admin' && 'Central Governance & Accreditation Portal'}
                 </h1>
               </div>
 
-              {(rawRole === 'trainer' || rawRole === 'admin') && (
-                <div className="flex items-center gap-2">
+              {/* Action Trigger Buttons w.r.t Role */}
+              {rawRole === 'trainer' && (
+                <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    onClick={() => setUploadResourceOpen(true)}
+                    className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 shadow-xs hover:bg-slate-50 dark:hover:bg-slate-800 transition"
+                  >
+                    <Upload size={14} className="text-blue-600 dark:text-indigo-400" /> Upload Resources
+                  </button>
                   <button
                     onClick={() => setCreateQuizOpen(true)}
                     className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 shadow-xs hover:bg-slate-50 dark:hover:bg-slate-800 transition"
                   >
-                    <Award size={15} className="text-blue-600 dark:text-indigo-400" /> Create Checkpoint
+                    <Award size={14} className="text-blue-600 dark:text-indigo-400" /> Create Checkpoint
                   </button>
                   <button
                     onClick={() => setCreateModuleOpen(true)}
@@ -1011,26 +1107,40 @@ export const Index: React.FC = () => {
                   </button>
                 </div>
               )}
+
+              {rawRole === 'admin' && (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setAnnouncementsModalOpen(true)}
+                    className="flex items-center gap-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 text-xs font-bold shadow-sm transition"
+                  >
+                    <Megaphone size={14} /> Broadcast Announcement
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* TAB: OVERVIEW */}
             {workspaceTab === 'overview' && (
               <>
+                {/* Metric Summary Cards */}
                 <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
                   <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
                     <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">
-                      {rawRole === 'trainer' ? 'Published Tracks' : 'Enrolled Modules'}
+                      {rawRole === 'trainer' ? 'Published Tracks' : 'Enrolled Tracks'}
                     </p>
-                    <p className="mt-2 text-[24px] font-extrabold text-slate-900 dark:text-white">{courses.length}</p>
+                    <p className="mt-2 text-[24px] font-extrabold text-slate-900 dark:text-white">
+                      {courses.filter((c) => (rawRole === 'trainee' ? c.enrolled : true)).length}
+                    </p>
                   </div>
                   <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
                     <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">
-                      {rawRole === 'trainer' ? 'Active Checkpoints' : 'Available Tests'}
+                      {rawRole === 'trainer' ? 'Active Checkpoints' : 'Available Checkpoints'}
                     </p>
                     <p className="mt-2 text-[24px] font-extrabold text-slate-900 dark:text-white">{assessmentsList.length}</p>
                   </div>
                   <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
-                    <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">Average Performance</p>
+                    <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">Average Score</p>
                     <p className="mt-2 text-[24px] font-extrabold text-emerald-600 dark:text-emerald-400">89.2%</p>
                   </div>
                   <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
@@ -1039,22 +1149,57 @@ export const Index: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Admin Trainer Approval Queue (Slide 2 & 4: Admin -> Approve Users) */}
+                {rawRole === 'admin' && pendingTrainers.length > 0 && (
+                  <div className="mt-8 rounded-2xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/40 dark:bg-amber-950/20 p-5 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-extrabold text-xs uppercase tracking-wider">
+                        <UserCheck size={16} /> Pending Trainer Verification Queue ({pendingTrainers.length})
+                      </div>
+                      <span className="text-[10px] text-amber-600 dark:text-amber-400">Admin Clearance Required</span>
+                    </div>
+
+                    <div className="space-y-2">
+                      {pendingTrainers.map((pt) => (
+                        <div
+                          key={pt.id}
+                          className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-amber-200/60 dark:border-amber-900/40 flex items-center justify-between text-xs"
+                        >
+                          <div>
+                            <span className="font-bold text-slate-900 dark:text-white">{pt.name}</span>
+                            <span className="text-slate-400 ml-2">• {pt.institution} ({pt.domain})</span>
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleApproveTrainer(pt.id)}
+                              className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px]"
+                            >
+                              Verify & Approve
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Course Directory / Open Library Marketplace (Slide 3) */}
                 <div className="mt-9">
                   <div className="flex items-center justify-between">
                     <div>
                       <h2 className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white">
-                        Institutional Course Library
+                        Marketplace & Open Library Hub
                       </h2>
                       <p className="text-xs text-slate-500 dark:text-slate-400">
-                        Accredited curricula and interactive modules available under your scope.
+                        Institutional course tracks with transparent faculty competency mapping (Slide 6)[cite: 2].
                       </p>
                     </div>
-                    {(rawRole === 'trainer' || rawRole === 'admin') && (
+                    {rawRole === 'trainer' && (
                       <button
                         onClick={() => setCreateModuleOpen(true)}
                         className="text-xs font-bold text-blue-600 dark:text-indigo-400 hover:underline"
                       >
-                        + Add New
+                        + Add Track
                       </button>
                     )}
                   </div>
@@ -1074,7 +1219,7 @@ export const Index: React.FC = () => {
                               {c.type}
                             </span>
                             <span className="text-[10px] font-extrabold bg-black/25 px-2 py-0.5 rounded">
-                              {c.progress}% Done
+                              {c.progress}% Completed
                             </span>
                           </div>
                           <h3 className="mt-2 text-sm font-extrabold leading-snug">{c.title}</h3>
@@ -1085,13 +1230,47 @@ export const Index: React.FC = () => {
 
                         <div className="p-4 flex flex-col justify-between grow space-y-4">
                           <div>
-                            <p className="text-[11px] text-slate-500 dark:text-slate-400">Faculty: {c.instructor}</p>
+                            {/* Learner-Visible Trainer Competency Trigger (Slide 2 & 6) */}
+                            <button
+                              onClick={() => {
+                                const profile = TRAINER_PROFILES[c.instructor] || {
+                                  name: c.instructor,
+                                  designation: 'Certified Lead Instructor',
+                                  institution: 'Capacity Connect Faculty Council',
+                                  experienceYears: 6,
+                                  rating: 4.8,
+                                  verified: true,
+                                  skills: ['Applied Pedagogy', 'Skill Telemetry', 'Cloud Engineering'],
+                                  bio: 'Verified faculty member on the Capacity Connect nationwide training network.',
+                                  publishedCoursesCount: 3,
+                                  accreditationPassRate: '92.5%',
+                                };
+                                setActiveTrainerProfile(profile);
+                              }}
+                              className="text-[11px] text-blue-600 dark:text-indigo-400 font-bold hover:underline flex items-center gap-1 group"
+                            >
+                              <span>Faculty: {c.instructor}</span>
+                              <span className="text-[10px] text-slate-400 group-hover:text-blue-500">↗ (View Competency)</span>
+                            </button>
+
                             <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">
                               {c.description}
                             </p>
                           </div>
 
                           <div className="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                            {rawRole === 'trainee' && (
+                              <button
+                                onClick={() => handleToggleEnroll(c.id)}
+                                className={`px-3 py-2 rounded-lg text-[11px] font-bold border transition ${
+                                  c.enrolled
+                                    ? 'border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'
+                                    : 'border-blue-600 bg-blue-50 dark:bg-indigo-950/60 text-blue-600 dark:text-indigo-300'
+                                }`}
+                              >
+                                {c.enrolled ? 'Enrolled ✓' : 'Enroll +'}
+                              </button>
+                            )}
                             <button
                               onClick={() => handleOpenCourseReader(c)}
                               className="flex-1 rounded-lg border border-slate-200 dark:border-slate-700 py-2 text-[11px] font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
@@ -1125,7 +1304,7 @@ export const Index: React.FC = () => {
                       Access active lesson content, technical architecture breakdowns, and course guides.
                     </p>
                   </div>
-                  {(rawRole === 'trainer' || rawRole === 'admin') && (
+                  {rawRole === 'trainer' && (
                     <button
                       onClick={() => setCreateModuleOpen(true)}
                       className="flex items-center gap-1.5 rounded-xl bg-blue-600 dark:bg-indigo-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700 dark:hover:bg-indigo-500"
@@ -1157,7 +1336,6 @@ export const Index: React.FC = () => {
                         </button>
                       </div>
 
-                      {/* Nested Interactive Module List */}
                       <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800 grid sm:grid-cols-3 gap-2.5">
                         {c.modules.map((m) => (
                           <div
@@ -1194,7 +1372,7 @@ export const Index: React.FC = () => {
                     </h2>
                     <p className="text-xs text-slate-500 dark:text-slate-400">
                       {rawRole === 'trainer'
-                        ? 'Author questions and adjust pass criteria.'
+                        ? 'Author questions and adjust passing score criteria.'
                         : 'Server-graded evaluation with cryptographic proof of completion.'}
                     </p>
                   </div>
@@ -1220,7 +1398,7 @@ export const Index: React.FC = () => {
                         </span>
                         <h4 className="text-sm font-extrabold text-slate-900 dark:text-white mt-0.5">{a.title}</h4>
                         <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                          {a.questionsCount} Questions • {a.duration} • Required: {a.passingScore}% Pass
+                          {a.questionsCount} Questions • {a.duration} • Passing Threshold: {a.passingScore}%
                         </p>
                       </div>
                       <button
@@ -1328,21 +1506,34 @@ export const Index: React.FC = () => {
                   >
                     {gradingResult.score} / {gradingResult.total}
                   </span>{' '}
-                  ({gradingResult.percentage}%) • Minimum Required: {activeQuizItem.passingScore}%
+                  ({gradingResult.percentage}%) • Minimum Threshold: {activeQuizItem.passingScore}%
                 </p>
 
                 {gradingResult.passed ? (
-                  <button
-                    onClick={() => {
-                      setActiveCertModule(activeQuizItem.module);
-                      setCertScore(gradingResult.percentage);
-                      setActiveQuizItem(null);
-                      setCertModalOpen(true);
-                    }}
-                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-700"
-                  >
-                    <Award size={16} /> Mint Verifiable SHA-256 Certificate
-                  </button>
+                  <div className="space-y-2 mt-4">
+                    <button
+                      onClick={() => {
+                        setActiveCertModule(activeQuizItem.module);
+                        setCertScore(gradingResult.percentage);
+                        setActiveQuizItem(null);
+                        setCertModalOpen(true);
+                      }}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-700"
+                    >
+                      <Award size={16} /> Mint Verifiable SHA-256 Certificate
+                    </button>
+                    {/* Feedback loop trigger button */}
+                    <button
+                      onClick={() => {
+                        setActiveFeedbackCourse({ title: activeQuizItem.module, instructor: 'Prof. Aarav Mehta' });
+                        setActiveQuizItem(null);
+                        setFeedbackModalOpen(true);
+                      }}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-2 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50"
+                    >
+                      Provide Learning Experience Feedback →
+                    </button>
+                  </div>
                 ) : (
                   <button
                     onClick={() => {
@@ -1461,6 +1652,39 @@ export const Index: React.FC = () => {
           }}
         />
       )}
+
+      {/* SIH Specified Feature Modals */}
+      <TrainerProfileModal
+        isOpen={!!activeTrainerProfile}
+        trainer={activeTrainerProfile}
+        onClose={() => setActiveTrainerProfile(null)}
+      />
+
+      <FeedbackModal
+        isOpen={feedbackModalOpen}
+        courseTitle={activeFeedbackCourse?.title || 'Technical Capacity Course'}
+        trainerName={activeFeedbackCourse?.instructor || 'Prof. Aarav Mehta'}
+        onClose={() => setFeedbackModalOpen(false)}
+        onSubmitFeedback={(fb) => console.log('Feedback registered into competency engine:', fb)}
+      />
+
+      <UploadResourceModal
+        isOpen={uploadResourceOpen}
+        courses={courses}
+        onClose={() => setUploadResourceOpen(false)}
+        onUpload={(res) => console.log('Resource asset published to S3/Cloudflare R2 (Slide 3):', res)}
+      />
+
+      <AnnouncementsModal
+        isOpen={announcementsModalOpen}
+        onClose={() => setAnnouncementsModalOpen(false)}
+        onBroadcast={(ann) => {
+          setAnnouncements((prev) => [
+            { id: Date.now(), title: ann.title, date: 'Today', author: displayName },
+            ...prev,
+          ]);
+        }}
+      />
     </div>
   );
 };
