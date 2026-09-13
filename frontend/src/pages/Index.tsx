@@ -3,9 +3,12 @@ import {
   Award,
   BarChart3,
   BookOpen,
+  Briefcase,
+  Building2,
   CheckCircle2,
   ChevronDown,
   FileCheck2,
+  GraduationCap,
   LayoutDashboard,
   LogIn,
   LogOut,
@@ -89,7 +92,7 @@ const TRAINER_PROFILES: Record<string, TrainerCompetency> = {
     rating: 4.9,
     verified: true,
     skills: ['Microservices', 'FastAPI', 'Distributed Systems', 'Data Structures', 'RBAC Security'],
-    bio: 'Pioneering decentralized capacity building and air-gapped evaluation systems for national vocational education cohorts.',
+    bio: 'Pioneering decentralized capacity building and air-gapped evaluation systems for national vocational education cohorts[cite: 2].',
     publishedCoursesCount: 6,
     accreditationPassRate: '94.2%',
   },
@@ -101,7 +104,7 @@ const TRAINER_PROFILES: Record<string, TrainerCompetency> = {
     rating: 4.8,
     verified: true,
     skills: ['Community Mapping', 'Participatory Action Research (PAR)', 'Public Sector Governance'],
-    bio: 'Dedicated to grassroots skill acquisition, institutional outreach mapping, and scalable stakeholder feedback workflows.',
+    bio: 'Dedicated to grassroots skill acquisition, institutional outreach mapping, and scalable stakeholder feedback workflows[cite: 2].',
     publishedCoursesCount: 4,
     accreditationPassRate: '91.8%',
   },
@@ -113,9 +116,96 @@ const TRAINER_PROFILES: Record<string, TrainerCompetency> = {
     rating: 4.9,
     verified: true,
     skills: ['Statistical Inference', 'Predictive Modeling', 'Anomaly Detection', 'Cohort Telemetry'],
-    bio: 'Specializing in learner retention algorithms, statistical score variance, and server-side autograding pipelines.',
+    bio: 'Specializing in learner retention algorithms, statistical score variance, and server-side autograding pipelines[cite: 2].',
     publishedCoursesCount: 5,
     accreditationPassRate: '96.0%',
+  },
+};
+
+const TRAINER_LINKEDIN_DATA: Record<string, {
+  headline: string;
+  location: string;
+  about: string;
+  experience: { role: string; organization: string; duration: string; description: string }[];
+  education: { degree: string; institution: string; year: string }[];
+  certifications: { title: string; issuer: string; id: string; verified: boolean }[];
+  skills: string[];
+}> = {
+  DEFAULT: {
+    headline: 'Principal Pedagogical Architect • Lead Fellow in Distributed Computing Systems',
+    location: 'New Delhi, India • Capacity Connect Central Faculty',
+    about:
+      'Passionate educator and systems architect specializing in asynchronous backend orchestration, non-blocking concurrency, and cryptographic accreditation standards[cite: 2]. Dedicated to bridging the gap between theoretical computer science and nationwide industry capacity building through hands-on, verifiable curricula[cite: 2].',
+    experience: [
+      {
+        role: 'Principal Pedagogical Fellow & Systems Architect',
+        organization: 'Capacity Connect National Training Framework',
+        duration: '2023 - Present • 3 yrs',
+        description:
+          'Authoring core technical curricula for microservices and cloud scalability, conducting server-side checkpoint evaluations, and mentoring institutional trainers[cite: 2].',
+      },
+      {
+        role: 'Associate Professor & Systems Researcher',
+        organization: 'Department of Computer Science & Engineering',
+        duration: '2019 - 2023 • 4 yrs',
+        description:
+          'Supervised capstone engineering projects on decentralized data validation, distributed caching consistency, and high-throughput web APIs.',
+      },
+      {
+        role: 'Senior Backend Engineer & Technical Lead',
+        organization: 'CloudScale Technologies',
+        duration: '2015 - 2019 • 4 yrs',
+        description:
+          'Designed fault-tolerant microservice clusters, automated gRPC/FastAPI pipelines, and database replication clusters for high-concurrency enterprise workloads.',
+      },
+    ],
+    education: [
+      {
+        degree: 'Ph.D. in Computer Science & Distributed Systems',
+        institution: 'Indian Institute of Technology (IIT) Delhi',
+        year: '2019',
+      },
+      {
+        degree: 'M.Tech in Software Engineering',
+        institution: 'Delhi Technological University (DTU)',
+        year: '2015',
+      },
+      {
+        degree: 'B.Tech in Information Technology',
+        institution: 'Guru Gobind Singh Indraprastha University',
+        year: '2013',
+      },
+    ],
+    certifications: [
+      {
+        title: 'Certified Kubernetes Cloud Native Architect (CKA)',
+        issuer: 'Cloud Native Computing Foundation (CNCF)',
+        id: 'CKA-90421-CC',
+        verified: true,
+      },
+      {
+        title: 'Master Evaluator & Technical Capacity Fellow',
+        issuer: 'National Skill Development & Accreditation Board',
+        id: 'NSDC-CAP-2026',
+        verified: true,
+      },
+      {
+        title: 'High-Throughput Microservice Architecture Specialist',
+        issuer: 'Open Systems Consortium',
+        id: 'OSC-8812-DIST',
+        verified: true,
+      },
+    ],
+    skills: [
+      'Asynchronous FastAPI',
+      'Distributed Systems',
+      'HMAC SHA-256 Cryptography',
+      'RBAC Security',
+      'gRPC Architecture',
+      'Database Concurrency',
+      'Pedagogical Design',
+      'Cohort Telemetry',
+    ],
   },
 };
 
@@ -309,7 +399,7 @@ export const Index: React.FC = () => {
   const [assessmentsList, setAssessmentsList] = useState<AssessmentItem[]>(INITIAL_ASSESSMENTS);
   const [loadingSubmission, setLoadingSubmission] = useState(false);
 
-  // SIH 26075 Governance Data (Slide 2 & 4)
+  // SIH 26075 Governance Data (Slide 2 & 4)[cite: 2]
   const [announcements, setAnnouncements] = useState([
     { id: 1, title: 'SIH 26075 Nationwide Accreditation Window Active', date: 'Sept 2026', author: 'Root Governance' },
     { id: 2, title: 'Decentralized Microservices Track Published by Faculty', date: 'Sept 2026', author: 'Technical Board' },
@@ -360,19 +450,19 @@ export const Index: React.FC = () => {
     {
       badge: 'Smart India Hackathon 2026 • Problem Statement SIH 26075',
       title: 'CAPACITY CONNECT: Unified Digital Capacity Building Portal',
-      desc: 'Centralized web portal addressing scattered learning resources, unverified trainer credentials, and lack of tracked learner progress (Team Techtonic).',
+      desc: 'Centralized web portal addressing scattered learning resources, unverified trainer credentials, and lack of tracked learner progress (Team Techtonic)[cite: 2].',
       icon: '🏛️',
     },
     {
       badge: 'Competitive Differentiator (Slide 6)',
       title: 'Learner-Visible Trainer Competency Profiles',
-      desc: 'Transparent verification of faculty qualifications, domain experience, and accreditation rates before course selection.',
+      desc: 'Transparent verification of faculty qualifications, domain experience, and accreditation rates before course selection[cite: 2].',
       icon: '⭐',
     },
     {
       badge: 'Cryptographic Provenance (Slide 3)',
       title: 'Air-Gapped Grading & HMAC SHA-256 Credentials',
-      desc: 'Tamper-resistant server-side assessment autograding minting immutable cryptographic digests registered to institutional profiles.',
+      desc: 'Tamper-resistant server-side assessment autograding minting immutable cryptographic digests registered to institutional profiles[cite: 2].',
       icon: '🔐',
     },
   ];
@@ -421,7 +511,7 @@ export const Index: React.FC = () => {
   const roleDisplay = rawRole.charAt(0).toUpperCase() + rawRole.slice(1);
   const institutionDisplay = (user as any)?.institution || 'Capacity Connect Central Node';
 
-  // Course Enrollment Handler (Slide 2: Trainee -> Enroll)
+  // Course Enrollment Handler (Slide 2: Trainee -> Enroll)[cite: 2]
   const handleToggleEnroll = (courseId: number) => {
     setCourses((prev) =>
       prev.map((c) => (c.id === courseId ? { ...c, enrolled: !c.enrolled } : c))
@@ -529,7 +619,7 @@ export const Index: React.FC = () => {
     }, 350);
   };
 
-  // Admin Trainer Approval Action (Slide 2 & 4: Admin -> Approve Users)
+  // Admin Trainer Approval Action (Slide 2 & 4: Admin -> Approve Users)[cite: 2]
   const handleApproveTrainer = (trainerId: number) => {
     setPendingTrainers((prev) => prev.filter((t) => t.id !== trainerId));
   };
@@ -572,13 +662,16 @@ export const Index: React.FC = () => {
       questionsCount: newQuiz.questions?.length || 2,
       passingScore: newQuiz.passingScore || 70,
       duration: `${(newQuiz.questions?.length || 2) * 5} min`,
-      questions: newQuiz.questions?.length > 0 ? newQuiz.questions : [
-        {
-          q: 'What is the primary validation criteria for this module?',
-          options: ['Meeting passing score threshold', 'Bypassing questions', 'Skipping reading', 'Exiting test'],
-          correct: 0,
-        },
-      ],
+      questions:
+        newQuiz.questions?.length > 0
+          ? newQuiz.questions
+          : [
+              {
+                q: 'What is the primary validation criteria for this module?',
+                options: ['Meeting passing score threshold', 'Bypassing questions', 'Skipping reading', 'Exiting test'],
+                correct: 0,
+              },
+            ],
     };
 
     setAssessmentsList((prev) => [formatted, ...prev]);
@@ -619,7 +712,7 @@ export const Index: React.FC = () => {
   };
 
   // =========================================================================
-  // PRE-LOGIN DISPLAY (TEAM TECHTONIC • SIH 26075 SPECIFICATION)
+  // PRE-LOGIN DISPLAY (TEAM TECHTONIC • SIH 26075 SPECIFICATION)[cite: 2]
   // =========================================================================
   if (!user) {
     return (
@@ -652,13 +745,13 @@ export const Index: React.FC = () => {
           <div className="text-center max-w-3xl mx-auto space-y-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-800/80 text-indigo-300 text-xs font-bold shadow-lg">
               <span className="w-2 h-2 rounded-full bg-indigo-400 animate-ping" />
-              <span>Smart India Hackathon 2026 • Problem Statement SIH 26075 • Team Techtonic</span>
+              <span>Smart India Hackathon 2026 • Problem Statement SIH 26075 • Team Techtonic</span>[cite: 2]
             </div>
             <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-tight">
-              CAPACITY CONNECT: Digital Capacity Building & LMS Portal
+              CAPACITY CONNECT: Digital Capacity Building & LMS Portal[cite: 2]
             </h1>
             <p className="text-base sm:text-lg text-slate-400 leading-relaxed max-w-2xl mx-auto">
-              A unified digital ecosystem supporting organizational training, transparent trainer competency mapping, auto-graded assessments, and cryptographic qualifications.
+              A unified digital ecosystem supporting organizational training, transparent trainer competency mapping, auto-graded assessments, and cryptographic qualifications[cite: 2].
             </p>
             <div className="pt-2 flex flex-wrap justify-center gap-4">
               <button
@@ -727,7 +820,7 @@ export const Index: React.FC = () => {
                     Trainee Persona
                   </span>
                   <h4 className="font-bold text-base mt-2">Divyansh Chauhan</h4>
-                  <p className="text-xs text-slate-400 mt-1">Find & enroll, view trainer competency, take tests, mint certificates, and submit feedback.</p>
+                  <p className="text-xs text-slate-400 mt-1">Find & enroll, view trainer competency, take tests, mint certificates, and submit feedback[cite: 2].</p>
                 </div>
                 <button
                   onClick={() => quickDemoLogin('trainee')}
@@ -743,7 +836,7 @@ export const Index: React.FC = () => {
                     Trainer Persona
                   </span>
                   <h4 className="font-bold text-base mt-2">Prof. Aarav Mehta</h4>
-                  <p className="text-xs text-slate-400 mt-1">Manage training tracks, upload multi-format resources (PDF/Video/Link), author checkpoints, and monitor cohorts.</p>
+                  <p className="text-xs text-slate-400 mt-1">Manage training tracks, upload multi-format resources (PDF/Video/Link), author checkpoints, and monitor cohorts[cite: 2].</p>
                 </div>
                 <button
                   onClick={() => quickDemoLogin('trainer')}
@@ -759,7 +852,7 @@ export const Index: React.FC = () => {
                     Admin Persona
                   </span>
                   <h4 className="font-bold text-base mt-2">Central Root Authority</h4>
-                  <p className="text-xs text-slate-400 mt-1">Approve pending trainer applications, dispatch institutional announcements, and monitor central telemetry.</p>
+                  <p className="text-xs text-slate-400 mt-1">Approve pending trainer applications, dispatch institutional announcements, and monitor central telemetry[cite: 2].</p>
                 </div>
                 <button
                   onClick={() => quickDemoLogin('admin')}
@@ -776,21 +869,21 @@ export const Index: React.FC = () => {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
             <div className="bg-[#0E1526] border border-slate-800 rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
               <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 className="font-bold text-lg">Capacity Connect Architecture Blueprint (Slide 3)</h3>
+                <h3 className="font-bold text-lg">Capacity Connect Architecture Blueprint (Slide 3)[cite: 2]</h3>
                 <button onClick={() => setShowArchModal(false)} className="text-slate-400 hover:text-white font-bold">✕</button>
               </div>
               <div className="space-y-4 text-xs text-slate-400 leading-relaxed font-mono">
                 <div className="p-4 rounded-xl bg-[#0B101E] border border-slate-800">
                   <div className="text-indigo-400 font-bold mb-1">[Frontend Tier: React + Vite + Tailwind]</div>
-                  Stateless interface interacting via OAuth2 Bearer JWT. Zero client evaluation secrets.
+                  Stateless interface interacting via OAuth2 Bearer JWT[cite: 2]. Zero client evaluation secrets.
                 </div>
                 <div className="p-4 rounded-xl bg-[#0B101E] border border-slate-800">
                   <div className="text-cyan-400 font-bold mb-1">[Backend Engine: FastAPI + SQLAlchemy + PostgreSQL]</div>
-                  Asynchronous autograding engine & HMAC SHA-256 digital certificate stamping.
+                  Asynchronous autograding engine & HMAC SHA-256 digital certificate stamping[cite: 2].
                 </div>
                 <div className="p-4 rounded-xl bg-[#0B101E] border border-slate-800">
                   <div className="text-emerald-400 font-bold mb-1">[Differentiator: Trainer Competency Matching]</div>
-                  Peer-reviewed trainer profiles & verified institutional skill accreditation mapping.
+                  Peer-reviewed trainer profiles & verified institutional skill accreditation mapping[cite: 2].
                 </div>
               </div>
               <button onClick={() => setShowArchModal(false)} className="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs">
@@ -841,7 +934,7 @@ export const Index: React.FC = () => {
 
         {authModalOpen && <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />}
         <footer className="border-t border-slate-800/80 py-6 px-6 text-center text-xs text-slate-500">
-          Capacity Connect • Smart India Hackathon 2026 • Problem Statement SIH 26075 • Team Techtonic
+          Capacity Connect • Smart India Hackathon 2026 • Problem Statement SIH 26075 • Team Techtonic[cite: 2]
         </footer>
       </div>
     );
@@ -903,7 +996,7 @@ export const Index: React.FC = () => {
                   <span className="block text-xs font-bold text-slate-900 dark:text-white leading-tight">
                     {displayName}
                   </span>
-                  <span className="block text-[10px] font-medium text-slate-400 leading-tight">
+                  <span className="block text-[10px] font-medium text-slate-400 dark:text-slate-400 leading-tight">
                     <span className={`font-semibold ${rawRole === 'admin' ? 'text-amber-600 dark:text-amber-400' : 'text-blue-600 dark:text-indigo-400'}`}>
                       {roleDisplay}
                     </span>
@@ -1035,7 +1128,7 @@ export const Index: React.FC = () => {
         {/* Dynamic Display Area */}
         <main className="min-w-0 flex-1 px-4 py-7 sm:px-7 lg:px-10 lg:py-9">
           <div className="mx-auto max-w-[1120px]">
-            {/* Institutional Announcement Banner (Slide 2: Announcements) */}
+            {/* Institutional Announcement Banner (Slide 2: Announcements)[cite: 2] */}
             {announcements.length > 0 && (
               <div className="mb-6 p-4 rounded-2xl border border-indigo-200 dark:border-indigo-900/60 bg-gradient-to-r from-blue-50 via-indigo-50/50 to-white dark:from-indigo-950/40 dark:via-slate-900 dark:to-slate-900 flex items-center justify-between shadow-xs">
                 <div className="flex items-center gap-3">
@@ -1123,38 +1216,211 @@ export const Index: React.FC = () => {
             {/* TAB: OVERVIEW */}
             {workspaceTab === 'overview' && (
               <>
-                {/* Metric Summary Cards */}
-                <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-                  <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
-                    <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">
-                      {rawRole === 'trainer' ? 'Published Tracks' : 'Enrolled Tracks'}
-                    </p>
-                    <p className="mt-2 text-[24px] font-extrabold text-slate-900 dark:text-white">
-                      {courses.filter((c) => (rawRole === 'trainee' ? c.enrolled : true)).length}
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
-                    <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">
-                      {rawRole === 'trainer' ? 'Active Checkpoints' : 'Available Checkpoints'}
-                    </p>
-                    <p className="mt-2 text-[24px] font-extrabold text-slate-900 dark:text-white">{assessmentsList.length}</p>
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
-                    <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">Average Score</p>
-                    <p className="mt-2 text-[24px] font-extrabold text-emerald-600 dark:text-emerald-400">89.2%</p>
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
-                    <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">Accreditation</p>
-                    <p className="mt-2 text-[24px] font-extrabold text-blue-600 dark:text-indigo-400">Verified</p>
-                  </div>
-                </div>
+                {rawRole === 'trainer' ? (
+                  /* =========================================================
+                     LINKEDIN-STYLE FACULTY COMPETENCY PROFILE (TRAINER VIEW)[cite: 2]
+                     ========================================================= */
+                  <div className="space-y-6 mb-10">
+                    {/* Profile Header Card */}
+                    <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] overflow-hidden shadow-xs">
+                      <div className="h-32 bg-gradient-to-r from-blue-700 via-indigo-700 to-cyan-600 relative">
+                        <div className="absolute top-3 right-4 flex items-center gap-2">
+                          <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[11px] font-bold border border-white/30 flex items-center gap-1.5">
+                            <ShieldCheck size={13} className="text-emerald-300" />
+                            Verified Institutional Faculty[cite: 2]
+                          </span>
+                        </div>
+                      </div>
 
-                {/* Admin Trainer Approval Queue (Slide 2 & 4: Admin -> Approve Users) */}
+                      <div className="px-6 pb-6 pt-0 relative">
+                        <div className="flex flex-col sm:flex-row sm:items-end justify-between -mt-12 gap-4">
+                          <div className="flex items-end gap-4">
+                            <div className="h-24 w-24 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 border-4 border-white dark:border-[#0E1526] flex items-center justify-center text-white text-3xl font-black shadow-lg">
+                              {displayName.slice(0, 2).toUpperCase()}
+                            </div>
+                            <div className="mb-1">
+                              <div className="flex items-center gap-2">
+                                <h2 className="text-xl font-black text-slate-900 dark:text-white leading-tight">
+                                  {displayName}
+                                </h2>
+                                <span className="text-blue-600 dark:text-indigo-400" title="Verified Educator">
+                                  <ShieldCheck size={18} />
+                                </span>
+                              </div>
+                              <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 mt-0.5">
+                                {TRAINER_LINKEDIN_DATA.DEFAULT.headline}
+                              </p>
+                              <p className="text-[11px] text-slate-400 mt-0.5">
+                                {TRAINER_LINKEDIN_DATA.DEFAULT.location}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <div className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-center">
+                              <span className="text-[10px] font-bold uppercase text-slate-400 block">Courses</span>
+                              <span className="text-sm font-black text-slate-900 dark:text-white">{courses.length}</span>
+                            </div>
+                            <div className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-center">
+                              <span className="text-[10px] font-bold uppercase text-slate-400 block">Pass Rate</span>
+                              <span className="text-sm font-black text-emerald-600 dark:text-emerald-400">94.2%</span>
+                            </div>
+                            <div className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-center">
+                              <span className="text-[10px] font-bold uppercase text-slate-400 block">Learner Rating</span>
+                              <span className="text-sm font-black text-amber-500 flex items-center justify-center gap-0.5">
+                                <Star size={12} fill="currentColor" /> 4.9
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Multi-Block Suite */}
+                    <div className="grid lg:grid-cols-3 gap-6">
+                      <div className="lg:col-span-2 space-y-6">
+                        {/* 1. About Block */}
+                        <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-3">
+                          <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+                            <FileText size={16} className="text-blue-600 dark:text-indigo-400" /> About
+                          </h3>
+                          <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                            {TRAINER_LINKEDIN_DATA.DEFAULT.about}
+                          </p>
+                        </div>
+
+                        {/* 2. Professional Experience Block */}
+                        <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-4">
+                          <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+                            <Briefcase size={16} className="text-blue-600 dark:text-indigo-400" /> Professional Experience
+                          </h3>
+                          <div className="space-y-4 pt-1">
+                            {TRAINER_LINKEDIN_DATA.DEFAULT.experience.map((exp, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-start gap-3.5 pb-4 border-b border-slate-100 dark:border-slate-800/80 last:border-0 last:pb-0"
+                              >
+                                <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 shrink-0 mt-0.5">
+                                  <Building2 size={18} />
+                                </div>
+                                <div className="space-y-1">
+                                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                                    {exp.role}
+                                  </h4>
+                                  <p className="text-xs font-semibold text-blue-600 dark:text-indigo-400">
+                                    {exp.organization}
+                                  </p>
+                                  <p className="text-[11px] text-slate-400 font-mono">{exp.duration}</p>
+                                  <p className="text-xs text-slate-500 dark:text-slate-300 leading-relaxed pt-1">
+                                    {exp.description}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-6">
+                        {/* 3. Education Block */}
+                        <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-4">
+                          <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+                            <GraduationCap size={16} className="text-blue-600 dark:text-indigo-400" /> Education & Qualifications
+                          </h3>
+                          <div className="space-y-3.5">
+                            {TRAINER_LINKEDIN_DATA.DEFAULT.education.map((edu, idx) => (
+                              <div key={idx} className="space-y-0.5">
+                                <h4 className="text-xs font-bold text-slate-900 dark:text-white leading-snug">
+                                  {edu.degree}
+                                </h4>
+                                <p className="text-[11px] text-slate-500 dark:text-slate-400">{edu.institution}</p>
+                                <p className="text-[10px] font-mono text-indigo-600 dark:text-indigo-400">{edu.year}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* 4. Licenses & Certifications Block */}
+                        <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-4">
+                          <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+                            <Award size={16} className="text-emerald-500" /> Licenses & Certifications
+                          </h3>
+                          <div className="space-y-3">
+                            {TRAINER_LINKEDIN_DATA.DEFAULT.certifications.map((cert, idx) => (
+                              <div
+                                key={idx}
+                                className="p-3 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/40 space-y-1"
+                              >
+                                <div className="flex items-center justify-between">
+                                  <h4 className="text-xs font-bold text-slate-900 dark:text-white leading-tight">
+                                    {cert.title}
+                                  </h4>
+                                  <ShieldCheck size={14} className="text-emerald-500 shrink-0 ml-1" />
+                                </div>
+                                <p className="text-[11px] text-slate-400">{cert.issuer}</p>
+                                <p className="text-[10px] font-mono text-slate-500">ID: {cert.id}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* 5. Verified Competencies Block */}
+                        <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-3">
+                          <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+                            <CheckCircle2 size={16} className="text-blue-600 dark:text-indigo-400" /> Verified Competencies
+                          </h3>
+                          <div className="flex flex-wrap gap-1.5 pt-1">
+                            {TRAINER_LINKEDIN_DATA.DEFAULT.skills.map((skill, idx) => (
+                              <span
+                                key={idx}
+                                className="px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-indigo-950/60 text-blue-700 dark:text-indigo-300 font-semibold text-[11px] border border-blue-200/60 dark:border-indigo-800/60"
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* =========================================================
+                     STANDARD 4 STAT CARDS (TRAINEE & ADMIN OVERVIEW)
+                     ========================================================= */
+                  <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+                    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
+                      <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">
+                        {rawRole === 'admin' ? 'Managed Tracks' : 'Enrolled Tracks'}
+                      </p>
+                      <p className="mt-2 text-[24px] font-extrabold text-slate-900 dark:text-white">
+                        {courses.filter((c) => (rawRole === 'trainee' ? c.enrolled : true)).length}
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
+                      <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">
+                        {rawRole === 'admin' ? 'Total Checkpoints' : 'Available Checkpoints'}
+                      </p>
+                      <p className="mt-2 text-[24px] font-extrabold text-slate-900 dark:text-white">
+                        {assessmentsList.length}
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
+                      <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">Average Score</p>
+                      <p className="mt-2 text-[24px] font-extrabold text-emerald-600 dark:text-emerald-400">89.2%</p>
+                    </div>
+                    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
+                      <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">Accreditation</p>
+                      <p className="mt-2 text-[24px] font-extrabold text-blue-600 dark:text-indigo-400">Verified</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Admin Trainer Approval Queue (Slide 2 & 4: Admin -> Approve Users)[cite: 2] */}
                 {rawRole === 'admin' && pendingTrainers.length > 0 && (
                   <div className="mt-8 rounded-2xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/40 dark:bg-amber-950/20 p-5 space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-extrabold text-xs uppercase tracking-wider">
-                        <UserCheck size={16} /> Pending Trainer Verification Queue ({pendingTrainers.length})
+                        <UserCheck size={16} /> Pending Trainer Verification Queue ({pendingTrainers.length})[cite: 2]
                       </div>
                       <span className="text-[10px] text-amber-600 dark:text-amber-400">Admin Clearance Required</span>
                     </div>
@@ -1183,12 +1449,12 @@ export const Index: React.FC = () => {
                   </div>
                 )}
 
-                {/* Course Directory / Open Library Marketplace (Slide 3) */}
+                {/* Course Directory / Open Library Marketplace (Slide 3)[cite: 2] */}
                 <div className="mt-9">
                   <div className="flex items-center justify-between">
                     <div>
                       <h2 className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white">
-                        Marketplace & Open Library Hub
+                        Marketplace & Open Library Hub[cite: 2]
                       </h2>
                       <p className="text-xs text-slate-500 dark:text-slate-400">
                         Institutional course tracks with transparent faculty competency mapping (Slide 6)[cite: 2].
@@ -1230,7 +1496,7 @@ export const Index: React.FC = () => {
 
                         <div className="p-4 flex flex-col justify-between grow space-y-4">
                           <div>
-                            {/* Learner-Visible Trainer Competency Trigger (Slide 2 & 6) */}
+                            {/* Learner-Visible Trainer Competency Trigger (Slide 2 & 6)[cite: 2] */}
                             <button
                               onClick={() => {
                                 const profile = TRAINER_PROFILES[c.instructor] || {
@@ -1241,7 +1507,7 @@ export const Index: React.FC = () => {
                                   rating: 4.8,
                                   verified: true,
                                   skills: ['Applied Pedagogy', 'Skill Telemetry', 'Cloud Engineering'],
-                                  bio: 'Verified faculty member on the Capacity Connect nationwide training network.',
+                                  bio: 'Verified faculty member on the Capacity Connect nationwide training network[cite: 2].',
                                   publishedCoursesCount: 3,
                                   accreditationPassRate: '92.5%',
                                 };
@@ -1520,7 +1786,7 @@ export const Index: React.FC = () => {
                       }}
                       className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-700"
                     >
-                      <Award size={16} /> Mint Verifiable SHA-256 Certificate
+                      <Award size={16} /> Mint Verifiable SHA-256 Certificate[cite: 2]
                     </button>
                     {/* Feedback loop trigger button */}
                     <button
