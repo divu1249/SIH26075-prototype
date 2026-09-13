@@ -7,7 +7,10 @@ import CertificateModal from '../components/CertificateModal';
 import AdminConsole from '../components/AdminConsole';
 import AnalyticsView from '../components/AnalyticsView';
 import CreateModuleModal from '../components/CreateModuleModal';
-import CreateQuizModal from '../components/CreateQuizModal';{
+import CreateQuizModal from '../components/CreateQuizModal';
+
+interface Module {
+  id: number;
   title: string;
   description: string;
   duration_minutes: number;
