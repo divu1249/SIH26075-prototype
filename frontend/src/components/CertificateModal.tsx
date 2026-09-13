@@ -86,4 +86,3 @@ export function CertificateModal({
   );
 }
 export default CertificateModal;
-export { CertificateModal };

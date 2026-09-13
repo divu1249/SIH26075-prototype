@@ -232,4 +232,3 @@ export function AdminConsole() {
   );
 }
 export default AdminConsole;
-// or: export { AdminConsole };

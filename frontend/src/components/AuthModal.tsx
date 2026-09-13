@@ -321,4 +321,3 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   );
 }
 export default AuthModal;
-export { AuthModal };

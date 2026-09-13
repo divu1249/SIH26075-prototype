@@ -199,4 +199,3 @@ export function CreateQuizModal({ isOpen, onClose, onSave }: CreateQuizModalProp
   );
 }
 export default CreateQuizModal;
-export { CreateQuizModal };

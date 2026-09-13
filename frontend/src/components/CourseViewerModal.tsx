@@ -263,4 +263,3 @@ export function CourseViewerModal({
   );
 }
 export default CourseViewerModal;
-export { CourseViewerModal };

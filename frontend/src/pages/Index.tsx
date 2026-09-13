@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { AcademiaLogo } from '../components/AcademiaLogo';
-import { AuthModal } from '../components/AuthModal';
-import { CourseViewerModal } from '../components/CourseViewerModal';
-import { CertificateModal } from '../components/CertificateModal';
-import { AdminConsole } from '../components/AdminConsole';
-import { AnalyticsView } from '../components/AnalyticsView';
-import { CreateModuleModal } from '../components/CreateModuleModal';
-import { CreateQuizModal } from '../components/CreateQuizModal';  id: number;{
+import AcademiaLogo from '../components/AcademiaLogo';
+import AuthModal from '../components/AuthModal';
+import CourseViewerModal from '../components/CourseViewerModal';
+import CertificateModal from '../components/CertificateModal';
+import AdminConsole from '../components/AdminConsole';
+import AnalyticsView from '../components/AnalyticsView';
+import CreateModuleModal from '../components/CreateModuleModal';
+import CreateQuizModal from '../components/CreateQuizModal';{
   title: string;
   description: string;
   duration_minutes: number;

@@ -138,4 +138,3 @@ export function CreateModuleModal({ isOpen, onClose, onCreated }: CreateModuleMo
   );
 }
 export default CreateModuleModal;
-export { CreateModuleModal };
