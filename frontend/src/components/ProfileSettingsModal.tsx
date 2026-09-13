@@ -1,186 +1,183 @@
-import { useState, useEffect } from "react";
-import { X, Building2, KeyRound, CheckCircle2 } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import React, { useState } from 'react';
+import { Building2, Mail, Sparkles, User, X, Briefcase, FileText } from 'lucide-react';
+
+export interface UserProfileData {
+  name: string;
+  email: string;
+  institution: string;
+  headline?: string;
+  bio?: string;
+  departmentOrStandard?: string;
+  skills?: string;
+}
 
 interface ProfileSettingsModalProps {
   isOpen: boolean;
+  user: any;
   onClose: () => void;
+  onSave: (updated: UserProfileData) => void;
 }
 
-export function ProfileSettingsModal({ isOpen, onClose }: ProfileSettingsModalProps) {
-  const { user, updateProfile } = useAuth();
+export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
+  isOpen,
+  user,
+  onClose,
+  onSave,
+}) => {
+  const [name, setName] = useState(user?.name || user?.fullName || 'Candidate');
+  const [email, setEmail] = useState(user?.email || '');
+  const [institution, setInstitution] = useState(user?.institution || 'Capacity Connect Central Node');
+  const [headline, setHeadline] = useState(
+    user?.headline || 'Lead Fellow in Distributed Computing Systems'
+  );
+  const [bio, setBio] = useState(
+    user?.bio || 'Engaged in nationwide capacity building, skill verification, and technical curriculum mastery.'
+  );
+  const [skills, setSkills] = useState(
+    user?.skills || 'FastAPI, Microservices, Distributed Systems, Cloud Architecture'
+  );
 
-  const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [institution, setInstitution] = useState("");
-  const [departmentOrStandard, setDepartmentOrStandard] = useState("");
-  const [identityNumber, setIdentityNumber] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [savedNotice, setSavedNotice] = useState(false);
+  if (!isOpen) return null;
 
-  useEffect(() => {
-    if (user) {
-      setFullName(user.fullName);
-      setPhone(user.phone);
-      setInstitution(user.institution);
-      setDepartmentOrStandard(user.departmentOrStandard);
-      setIdentityNumber(user.identityNumber || "");
-    }
-  }, [user, isOpen]);
-
-  if (!isOpen || !user) return null;
-
-  const handleSave = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    updateProfile({
-      fullName,
-      phone,
-      institution,
-      departmentOrStandard,
-      identityNumber,
+    onSave({
+      name: name.trim(),
+      email: email.trim(),
+      institution: institution.trim(),
+      headline: headline.trim(),
+      bio: bio.trim(),
+      skills: skills.trim(),
     });
-    setSavedNotice(true);
-    setTimeout(() => {
-      setSavedNotice(false);
-      onClose();
-    }, 1200);
+    onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm overflow-y-auto">
-      <div className="relative my-8 w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl">
-        <div className="flex items-start justify-between border-b border-slate-100 pb-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-600">
-                Institutional ID & Settings
-              </span>
-              <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[9px] font-extrabold text-blue-700 uppercase">
-                {user.role}
-              </span>
-            </div>
-            <h2 className="mt-1 text-xl font-extrabold text-slate-950">Manage Profile Credentials</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-xl rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-6 sm:p-7 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+        <button
+          onClick={onClose}
+          className="absolute right-5 top-5 text-slate-400 hover:text-slate-600 dark:hover:text-white transition"
+        >
+          <X size={18} />
+        </button>
+
+        <div className="flex items-center gap-2.5 mb-1">
+          <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
+            <User size={18} />
           </div>
-          <button onClick={onClose} className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">
-            <X size={18} />
-          </button>
+          <div>
+            <h3 className="text-lg font-black text-slate-900 dark:text-white leading-tight">
+              Edit Institutional Profile
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Update your public identity, institutional affiliation, and verified credentials.
+            </p>
+          </div>
         </div>
 
-        <form onSubmit={handleSave} className="mt-5 space-y-4">
-          <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3.5 border border-slate-100">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 font-extrabold text-white text-xs">
-              {fullName.slice(0, 2).toUpperCase()}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-bold text-slate-900 truncate">{fullName || user.username}</p>
-              <p className="font-mono text-[10px] text-slate-400 truncate">{user.email}</p>
-            </div>
-            <span className="rounded-md border border-slate-200 bg-white px-2 py-1 text-[10px] font-bold text-slate-500 font-mono">
-              MUTUAL RBAC
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
+        <form onSubmit={handleSubmit} className="mt-5 space-y-4 text-xs">
+          <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-[11px] font-bold text-slate-600">Full Name</label>
-              <input
-                type="text"
-                required
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="mt-1 h-9 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs outline-none focus:border-blue-500 focus:bg-white"
-              />
-            </div>
-            <div>
-              <label className="text-[11px] font-bold text-slate-600">Contact Number</label>
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="mt-1 h-9 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs outline-none focus:border-blue-500 focus:bg-white"
-              />
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-4 space-y-3">
-            <p className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
-              <Building2 size={15} className="text-blue-600" />
-              Academic & Institutional Registry
-            </p>
-
-            <div>
-              <label className="text-[10px] font-bold text-slate-500">Institution / University</label>
-              <input
-                type="text"
-                required
-                value={institution}
-                onChange={(e) => setInstitution(e.target.value)}
-                className="mt-1 h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-2.5">
-              <div>
-                <label className="text-[10px] font-bold text-slate-500">Branch / Department</label>
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">
+                Full Display Name
+              </label>
+              <div className="relative">
                 <input
                   type="text"
                   required
-                  value={departmentOrStandard}
-                  onChange={(e) => setDepartmentOrStandard(e.target.value)}
-                  className="mt-1 h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs outline-none focus:border-blue-500"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:border-indigo-500 transition"
                 />
               </div>
-              <div>
-                <label className="text-[10px] font-bold text-slate-500">
-                  {user.role === "Trainer" ? "Faculty Code" : "Roll / Enrollment ID"}
-                </label>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">
+                Account Email
+              </label>
+              <div className="relative">
                 <input
-                  type="text"
-                  value={identityNumber}
-                  onChange={(e) => setIdentityNumber(e.target.value)}
-                  className="mt-1 h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs outline-none focus:border-blue-500"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:border-indigo-500 transition"
                 />
               </div>
             </div>
           </div>
 
           <div>
-            <label className="flex items-center gap-1 text-[11px] font-bold text-slate-600">
-              <KeyRound size={13} className="text-slate-400" />
-              Change Password (Leave blank to keep current)
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">
+              Affiliated Institution / Organization
             </label>
             <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="••••••••••••"
-              className="mt-1 h-9 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs outline-none focus:border-blue-500 focus:bg-white"
+              type="text"
+              required
+              value={institution}
+              onChange={(e) => setInstitution(e.target.value)}
+              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:border-indigo-500 transition"
             />
           </div>
 
-          {savedNotice && (
-            <div className="flex items-center gap-2 rounded-xl bg-emerald-50 p-2.5 text-xs font-bold text-emerald-700">
-              <CheckCircle2 size={16} /> Credentials updated successfully!
-            </div>
-          )}
+          <div>
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">
+              Professional Headline / Designation
+            </label>
+            <input
+              type="text"
+              value={headline}
+              onChange={(e) => setHeadline(e.target.value)}
+              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:border-indigo-500 transition"
+            />
+          </div>
 
-          <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-100">
+          <div>
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">
+              Professional Biography
+            </label>
+            <textarea
+              rows={3}
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:border-indigo-500 transition"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">
+              Competencies & Subject Expertise (Comma-separated)
+            </label>
+            <input
+              type="text"
+              value={skills}
+              onChange={(e) => setSkills(e.target.value)}
+              placeholder="e.g. Distributed Systems, Python, RBAC, Microservices"
+              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:border-indigo-500 transition"
+            />
+          </div>
+
+          <div className="pt-2 flex gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50"
+              className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-200 transition"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="rounded-xl bg-blue-600 px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700 transition"
+              className="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow-md shadow-indigo-600/25 transition"
             >
-              Save Changes
+              Save Profile Changes
             </button>
           </div>
         </form>
       </div>
     </div>
   );
-}
+};
+
+export default ProfileSettingsModal;

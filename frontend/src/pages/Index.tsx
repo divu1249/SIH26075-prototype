@@ -26,6 +26,12 @@ import {
   FileText,
   X,
   ShieldCheck,
+  Eye,
+  EyeOff,
+  Trash2,
+  TrendingUp,
+  Activity,
+  Users,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import AcademiaLogo from '../components/AcademiaLogo';
@@ -40,6 +46,7 @@ import TrainerProfileModal, { TrainerCompetency } from '../components/TrainerPro
 import FeedbackModal from '../components/FeedbackModal';
 import UploadResourceModal from '../components/UploadResourceModal';
 import AnnouncementsModal from '../components/AnnouncementsModal';
+import ProfileSettingsModal, { UserProfileData } from '../components/ProfileSettingsModal';
 
 type WorkspaceTab = 'overview' | 'learning' | 'assessments' | 'progress';
 
@@ -80,134 +87,49 @@ interface CourseItem {
   description: string;
   progress: number;
   enrolled: boolean;
+  isPublic: boolean;
   modules: LessonModule[];
 }
 
-const TRAINER_PROFILES: Record<string, TrainerCompetency> = {
-  'Prof. Aarav Mehta': {
-    name: 'Prof. Aarav Mehta',
-    designation: 'Principal Pedagogical Architect',
-    institution: 'IIT Delhi • Department of Computer Science',
-    experienceYears: 12,
-    rating: 4.9,
-    verified: true,
-    skills: ['Microservices', 'FastAPI', 'Distributed Systems', 'Data Structures', 'RBAC Security'],
-    bio: 'Pioneering decentralized capacity building and air-gapped evaluation systems for national vocational education cohorts.',
-    publishedCoursesCount: 6,
-    accreditationPassRate: '94.2%',
-  },
-  'Dr. Nia Okafor': {
-    name: 'Dr. Nia Okafor',
-    designation: 'Senior Outreach Specialist',
-    institution: 'National Capacity Network',
-    experienceYears: 9,
-    rating: 4.8,
-    verified: true,
-    skills: ['Community Mapping', 'Participatory Action Research (PAR)', 'Public Sector Governance'],
-    bio: 'Dedicated to grassroots skill acquisition, institutional outreach mapping, and scalable stakeholder feedback workflows.',
-    publishedCoursesCount: 4,
-    accreditationPassRate: '91.8%',
-  },
-  'Liam Chen': {
-    name: 'Liam Chen',
-    designation: 'Lead Data Strategist',
-    institution: 'Apex Learning Analytics Lab',
-    experienceYears: 8,
-    rating: 4.9,
-    verified: true,
-    skills: ['Statistical Inference', 'Predictive Modeling', 'Anomaly Detection', 'Cohort Telemetry'],
-    bio: 'Specializing in learner retention algorithms, statistical score variance, and server-side autograding pipelines.',
-    publishedCoursesCount: 5,
-    accreditationPassRate: '96.0%',
-  },
-};
+interface NoticeItem {
+  id: number;
+  title: string;
+  category: 'Accreditation' | 'Academic' | 'System' | 'Governance';
+  content: string;
+  date: string;
+  author: string;
+  isPublic: boolean;
+}
 
-const TRAINER_LINKEDIN_DATA: Record<string, {
-  headline: string;
-  location: string;
-  about: string;
-  experience: { role: string; organization: string; duration: string; description: string }[];
-  education: { degree: string; institution: string; year: string }[];
-  certifications: { title: string; issuer: string; id: string; verified: boolean }[];
-  skills: string[];
-}> = {
-  DEFAULT: {
-    headline: 'Principal Pedagogical Architect • Lead Fellow in Distributed Computing Systems',
-    location: 'New Delhi, India • AcademiaEdu Central Faculty',
-    about:
-      'Passionate educator and systems architect specializing in asynchronous backend orchestration, non-blocking concurrency, and cryptographic accreditation standards. Dedicated to bridging the gap between theoretical computer science and nationwide industry capacity building through hands-on, verifiable curricula.',
-    experience: [
-      {
-        role: 'Principal Pedagogical Fellow & Systems Architect',
-        organization: 'Capacity Connect National Training Framework',
-        duration: '2023 - Present • 3 yrs',
-        description:
-          'Authoring core technical curricula for microservices and cloud scalability, conducting server-side checkpoint evaluations, and mentoring institutional trainers.',
-      },
-      {
-        role: 'Associate Professor & Systems Researcher',
-        organization: 'Department of Computer Science & Engineering',
-        duration: '2019 - 2023 • 4 yrs',
-        description:
-          'Supervised capstone engineering projects on decentralized data validation, distributed caching consistency, and high-throughput web APIs.',
-      },
-      {
-        role: 'Senior Backend Engineer & Technical Lead',
-        organization: 'CloudScale Technologies',
-        duration: '2015 - 2019 • 4 yrs',
-        description:
-          'Designed fault-tolerant microservice clusters, automated gRPC/FastAPI pipelines, and database replication clusters for high-concurrency enterprise workloads.',
-      },
-    ],
-    education: [
-      {
-        degree: 'Ph.D. in Computer Science & Distributed Systems',
-        institution: 'Indian Institute of Technology (IIT) Delhi',
-        year: '2019',
-      },
-      {
-        degree: 'M.Tech in Software Engineering',
-        institution: 'Delhi Technological University (DTU)',
-        year: '2015',
-      },
-      {
-        degree: 'B.Tech in Information Technology',
-        institution: 'Guru Gobind Singh Indraprastha University',
-        year: '2013',
-      },
-    ],
-    certifications: [
-      {
-        title: 'Certified Kubernetes Cloud Native Architect (CKA)',
-        issuer: 'Cloud Native Computing Foundation (CNCF)',
-        id: 'CKA-90421-CC',
-        verified: true,
-      },
-      {
-        title: 'Master Evaluator & Technical Capacity Fellow',
-        issuer: 'National Skill Development & Accreditation Board',
-        id: 'NSDC-CAP-2026',
-        verified: true,
-      },
-      {
-        title: 'High-Throughput Microservice Architecture Specialist',
-        issuer: 'Open Systems Consortium',
-        id: 'OSC-8812-DIST',
-        verified: true,
-      },
-    ],
-    skills: [
-      'Asynchronous FastAPI',
-      'Distributed Systems',
-      'HMAC SHA-256 Cryptography',
-      'RBAC Security',
-      'gRPC Architecture',
-      'Database Concurrency',
-      'Pedagogical Design',
-      'Cohort Telemetry',
-    ],
+const INITIAL_NOTICES: NoticeItem[] = [
+  {
+    id: 1,
+    title: 'SIH 26075 Nationwide Accreditation Window Officially Active',
+    category: 'Accreditation',
+    content: 'The centralized validation node is now verifying SHA-256 HMAC credential mints across all institutional cohorts.',
+    date: 'Sept 13, 2026',
+    author: 'Central Root Authority',
+    isPublic: true,
   },
-};
+  {
+    id: 2,
+    title: 'New Cloud Microservices & Concurrency Architecture Track Released',
+    category: 'Academic',
+    content: 'Faculty members have published specialized units covering asynchronous event loops and FastAPI throughput serialization.',
+    date: 'Sept 12, 2026',
+    author: 'Prof. Aarav Mehta',
+    isPublic: true,
+  },
+  {
+    id: 3,
+    title: 'Stateless RBAC Security Policy & Evaluator Integrity Directives',
+    category: 'Governance',
+    content: 'Mutual exclusivity enforcement between assessment authoring and examination execution is strictly active.',
+    date: 'Sept 10, 2026',
+    author: 'Technical Board',
+    isPublic: true,
+  },
+];
 
 const INITIAL_COURSES: CourseItem[] = [
   {
@@ -221,6 +143,7 @@ const INITIAL_COURSES: CourseItem[] = [
     description: 'Foundational computer architecture, operating system security, and decentralized networking principles.',
     progress: 66,
     enrolled: true,
+    isPublic: true,
     modules: [
       {
         id: 101,
@@ -262,6 +185,7 @@ const INITIAL_COURSES: CourseItem[] = [
     description: 'Frameworks for decentralized community mapping, public-sector stakeholder alignment, and outreach telemetry.',
     progress: 50,
     enrolled: true,
+    isPublic: true,
     modules: [
       {
         id: 104,
@@ -294,6 +218,7 @@ const INITIAL_COURSES: CourseItem[] = [
     description: 'Statistical inference, metric extraction, and predictive dropout modeling across institutional cohorts.',
     progress: 100,
     enrolled: false,
+    isPublic: true,
     modules: [
       {
         id: 106,
@@ -394,23 +319,30 @@ export const Index: React.FC = () => {
   const [mobileNav, setMobileNav] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
-  // Dynamic Content Stores
+  // Dynamic Stores
   const [courses, setCourses] = useState<CourseItem[]>(INITIAL_COURSES);
   const [assessmentsList, setAssessmentsList] = useState<AssessmentItem[]>(INITIAL_ASSESSMENTS);
+  const [notices, setNotices] = useState<NoticeItem[]>(INITIAL_NOTICES);
   const [loadingSubmission, setLoadingSubmission] = useState(false);
 
-  // SIH 26075 Governance Data
-  const [announcements, setAnnouncements] = useState([
-    { id: 1, title: 'SIH 26075 Nationwide Accreditation Window Active', date: 'Sept 2026', author: 'Root Governance' },
-    { id: 2, title: 'Decentralized Microservices Track Published by Faculty', date: 'Sept 2026', author: 'Technical Board' },
+  // Admin Registered Users Roster (Live Managed Data)
+  const [managedUsers, setManagedUsers] = useState([
+    { id: 101, name: 'Divyansh Chauhan', role: 'Trainee', institution: 'ADGITM New Delhi', status: 'Active', compliance: '100%' },
+    { id: 102, name: 'Prof. Aarav Mehta', role: 'Trainer', institution: 'IIT Delhi', status: 'Verified', compliance: '98%' },
+    { id: 103, name: 'Dr. Nia Okafor', role: 'Trainer', institution: 'National Capacity Network', status: 'Verified', compliance: '95%' },
+    { id: 104, name: 'Liam Chen', role: 'Trainer', institution: 'Apex Analytics Lab', status: 'Verified', compliance: '99%' },
+    { id: 105, name: 'Aisha Verma', role: 'Trainee', institution: 'Delhi Technological Univ.', status: 'Active', compliance: '92%' },
   ]);
+
+  // Pending Trainer Approvals
   const [pendingTrainers, setPendingTrainers] = useState([
     { id: 201, name: 'Dr. Kabir Sen', institution: 'IIT Bombay', domain: 'Cloud Security', status: 'Pending Approval' },
     { id: 202, name: 'Prof. Sunita Rao', institution: 'NIT Trichy', domain: 'Edge AI Systems', status: 'Pending Approval' },
   ]);
 
-  // Global Modals
+  // Modals & Panels
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showArchModal, setShowArchModal] = useState(false);
   const [showSimulatorModal, setShowSimulatorModal] = useState(false);
@@ -423,6 +355,11 @@ export const Index: React.FC = () => {
   const [activeFeedbackCourse, setActiveFeedbackCourse] = useState<{ title: string; instructor: string } | null>(null);
   const [uploadResourceOpen, setUploadResourceOpen] = useState(false);
   const [announcementsModalOpen, setAnnouncementsModalOpen] = useState(false);
+
+  // Notice Creator Form (Admin Inline)
+  const [newNoticeTitle, setNewNoticeTitle] = useState('');
+  const [newNoticeCategory, setNewNoticeCategory] = useState<'Accreditation' | 'Academic' | 'System' | 'Governance'>('Academic');
+  const [newNoticeContent, setNewNoticeContent] = useState('');
 
   // Certificate Modal State
   const [certModalOpen, setCertModalOpen] = useState(false);
@@ -511,12 +448,32 @@ export const Index: React.FC = () => {
   const roleDisplay = rawRole.charAt(0).toUpperCase() + rawRole.slice(1);
   const institutionDisplay = (user as any)?.institution || 'Capacity Connect Central Node';
 
+  // Profile Save Callback (Updates user state and local storage)
+  const handleProfileSave = (updated: UserProfileData) => {
+    if (!user) return;
+    const nextUser = {
+      ...user,
+      name: updated.name,
+      fullName: updated.name,
+      email: updated.email,
+      institution: updated.institution,
+      headline: updated.headline,
+      bio: updated.bio,
+      skills: updated.skills,
+    };
+    localStorage.setItem('user', JSON.stringify(nextUser));
+    // Trigger custom event or re-sync
+    window.location.reload();
+  };
+
+  // Course Enrollment Handler
   const handleToggleEnroll = (courseId: number) => {
     setCourses((prev) =>
       prev.map((c) => (c.id === courseId ? { ...c, enrolled: !c.enrolled } : c))
     );
   };
 
+  // Dynamic Course Reader Launcher
   const handleOpenCourseReader = (course: CourseItem) => {
     const targetModule = course.modules?.[0] || {
       id: course.id,
@@ -532,6 +489,7 @@ export const Index: React.FC = () => {
     setViewerModalOpen(true);
   };
 
+  // Launch Assessment Checkpoint
   const handleStartAssessment = (moduleOrCourseTitle: string) => {
     const matched = assessmentsList.find(
       (a) =>
@@ -582,6 +540,7 @@ export const Index: React.FC = () => {
     setGradingResult(null);
   };
 
+  // Submit and Grade Evaluation
   const handleQuizSubmit = () => {
     if (!activeQuizItem) return;
     setLoadingSubmission(true);
@@ -615,10 +574,55 @@ export const Index: React.FC = () => {
     }, 350);
   };
 
+  // Admin Controls
   const handleApproveTrainer = (trainerId: number) => {
     setPendingTrainers((prev) => prev.filter((t) => t.id !== trainerId));
   };
 
+  const handleToggleCourseVisibility = (courseId: number) => {
+    setCourses((prev) =>
+      prev.map((c) => (c.id === courseId ? { ...c, isPublic: !c.isPublic } : c))
+    );
+  };
+
+  const handleDeleteCourse = (courseId: number) => {
+    setCourses((prev) => prev.filter((c) => c.id !== courseId));
+  };
+
+  const handleToggleUserStatus = (userId: number) => {
+    setManagedUsers((prev) =>
+      prev.map((u) => (u.id === userId ? { ...u, status: u.status === 'Active' ? 'Suspended' : 'Active' } : u))
+    );
+  };
+
+  const handleAddNotice = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newNoticeTitle.trim() || !newNoticeContent.trim()) return;
+    const created: NoticeItem = {
+      id: Date.now(),
+      title: newNoticeTitle.trim(),
+      category: newNoticeCategory,
+      content: newNoticeContent.trim(),
+      date: 'Sept 13, 2026',
+      author: displayName,
+      isPublic: true,
+    };
+    setNotices((prev) => [created, ...prev]);
+    setNewNoticeTitle('');
+    setNewNoticeContent('');
+  };
+
+  const handleDeleteNotice = (id: number) => {
+    setNotices((prev) => prev.filter((n) => n.id !== id));
+  };
+
+  const handleToggleNoticePublic = (id: number) => {
+    setNotices((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isPublic: !n.isPublic } : n))
+    );
+  };
+
+  // Authoring Callbacks
   const handleModuleCreated = (newMod: any) => {
     const newCourseItem: CourseItem = {
       id: Date.now(),
@@ -631,6 +635,7 @@ export const Index: React.FC = () => {
       description: newMod.description || 'Newly authored institutional curriculum module.',
       progress: 0,
       enrolled: true,
+      isPublic: true,
       modules: [
         {
           id: Date.now() + 1,
@@ -674,15 +679,16 @@ export const Index: React.FC = () => {
 
   const filteredCourses = useMemo(() => {
     const q = (searchQuery || '').trim().toLowerCase();
-    if (!q) return courses;
-    return courses.filter(
+    const visible = rawRole === 'admin' ? courses : courses.filter((c) => c.isPublic);
+    if (!q) return visible;
+    return visible.filter(
       (c) =>
         (c.title || '').toLowerCase().includes(q) ||
         (c.code || '').toLowerCase().includes(q) ||
         (c.instructor || '').toLowerCase().includes(q) ||
         (c.description || '').toLowerCase().includes(q)
     );
-  }, [courses, searchQuery]);
+  }, [courses, searchQuery, rawRole]);
 
   const quickDemoLogin = (role: 'trainee' | 'trainer' | 'admin') => {
     if (role === 'trainee') {
@@ -690,7 +696,7 @@ export const Index: React.FC = () => {
     } else if (role === 'trainer') {
       login('demo-token-trainer', { id: 102, name: 'Prof. Aarav Mehta', email: 'aarav@connect.edu', role: 'trainer' });
     } else {
-      login('demo-token-admin', { id: 103, name: 'Central Root Authority', email: 'admin.root@capacityconnect.gov', role: 'admin' });
+      login('demo-token-admin', { id: 103, name: 'Central Governance Root', email: 'admin.root@capacityconnect.gov', role: 'admin' });
     }
   };
 
@@ -706,12 +712,12 @@ export const Index: React.FC = () => {
   };
 
   // =========================================================================
-  // PRE-LOGIN DISPLAY (ENTERPRISE PRODUCT DESIGN + SIH 26075 SPECIFICATION)
+  // PRE-LOGIN DISPLAY (ENTERPRISE PRODUCT DESIGN + DUAL NOTICE BOARD)
   // =========================================================================
   if (!user) {
     return (
       <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#070B14] text-slate-900 dark:text-slate-100 transition-colors duration-200 flex flex-col justify-between relative overflow-x-hidden">
-        {/* Atmospheric Glow Orbs */}
+        {/* Glow Lights */}
         <div className="fixed inset-0 pointer-events-none z-0">
           <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-indigo-500/10 dark:bg-indigo-600/10 blur-[130px] rounded-full" />
           <div className="absolute top-96 -left-40 w-[500px] h-[500px] bg-cyan-500/5 dark:bg-cyan-600/5 blur-[120px] rounded-full" />
@@ -740,21 +746,18 @@ export const Index: React.FC = () => {
         {/* Hero Section */}
         <main className="max-w-7xl mx-auto px-6 py-12 w-full grow relative z-10 space-y-16">
           <div className="text-center max-w-3xl mx-auto space-y-6">
-            {/* Context Pill */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-800/80 text-indigo-700 dark:text-indigo-300 text-xs font-bold shadow-xs">
               <span className="w-2 h-2 rounded-full bg-indigo-600 dark:bg-indigo-400 animate-ping" />
-              <span>Smart India Hackathon 2026 • Problem Statement SIH 26075 • Team Techtonic</span>
+              <span>Smart India Hackathon 2026 • Problem Statement SIH 26075 • Team Techtonic</span>[cite: 2]
             </div>
 
-            {/* Enterprise Product Headline */}
             <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-tight text-slate-950 dark:text-white">
               Institutional Capacity Building & Verifiable Learning Engine
             </h1>
             <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
-              A unified digital ecosystem supporting organizational training, transparent trainer competency mapping, auto-graded assessments, and cryptographic qualifications.
+              A unified digital ecosystem supporting organizational training, transparent trainer competency mapping, auto-graded assessments, and cryptographic qualifications[cite: 2].
             </p>
 
-            {/* Primary Action Buttons */}
             <div className="pt-2 flex flex-wrap justify-center gap-4">
               <button
                 onClick={() => setAuthModalOpen(true)}
@@ -777,7 +780,45 @@ export const Index: React.FC = () => {
             </div>
           </div>
 
-          {/* Interactive Slide Carousel */}
+          {/* DUAL SURFACED OFFICIAL NOTICE BOARD (PRE-LOGIN) */}
+          <div className="p-6 sm:p-7 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-3">
+              <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+                <Megaphone size={18} />
+                <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                  Official Institutional Notice Board
+                </h3>
+              </div>
+              <span className="text-[10px] font-mono text-slate-400">Live Central Feed • Public Access</span>
+            </div>
+
+            <div className="grid sm:grid-cols-3 gap-4">
+              {notices.filter((n) => n.isPublic).map((notice) => (
+                <div
+                  key={notice.id}
+                  className="p-4 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/40 space-y-2"
+                >
+                  <div className="flex justify-between items-center text-[10px]">
+                    <span className="font-extrabold uppercase px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/60">
+                      {notice.category}
+                    </span>
+                    <span className="text-slate-400 font-mono">{notice.date}</span>
+                  </div>
+                  <h4 className="font-bold text-xs text-slate-900 dark:text-white leading-snug">
+                    {notice.title}
+                  </h4>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
+                    {notice.content}
+                  </p>
+                  <div className="text-[10px] font-medium text-slate-400 pt-1">
+                    Issued by: <span className="font-bold text-slate-600 dark:text-slate-300">{notice.author}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Slide Carousel */}
           <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#0E1526]/80 backdrop-blur-md shadow-xl dark:shadow-2xl relative overflow-hidden">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-extrabold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
@@ -810,7 +851,7 @@ export const Index: React.FC = () => {
             </div>
           </div>
 
-          {/* Evaluator 1-Click Instant Gateways */}
+          {/* 1-Click Evaluator Instant Gateways */}
           <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#0E1526]/80 shadow-xl dark:shadow-2xl space-y-6">
             <div>
               <h3 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Evaluator Instant Gateway</h3>
@@ -860,9 +901,9 @@ export const Index: React.FC = () => {
                   <span className="text-[10px] font-black uppercase tracking-wider text-purple-700 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/80 px-2 py-0.5 rounded border border-purple-200 dark:border-purple-800/50">
                     Admin Persona
                   </span>
-                  <h4 className="font-bold text-base mt-2 text-slate-900 dark:text-white">Team Techtonic Central Admin</h4>
+                  <h4 className="font-bold text-base mt-2 text-slate-900 dark:text-white">Central Governance Root</h4>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Approve incoming trainers, broadcast institutional announcements, and monitor central governance audits.
+                    Traffic visualizations, manage site notices, approve faculty, and regulate the public course directory.
                   </p>
                 </div>
                 <button
@@ -876,7 +917,6 @@ export const Index: React.FC = () => {
           </div>
         </main>
 
-        {/* Architecture Blueprint Modal */}
         {showArchModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/75 backdrop-blur-sm p-4">
             <div className="bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-slate-800 rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
@@ -905,7 +945,6 @@ export const Index: React.FC = () => {
           </div>
         )}
 
-        {/* Live Simulator Modal */}
         {showSimulatorModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/75 backdrop-blur-sm p-4">
             <div className="bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
@@ -971,7 +1010,7 @@ export const Index: React.FC = () => {
 
           <AcademiaLogo size={34} />
 
-          {/* Search Input */}
+          {/* Search Bar */}
           <div className="relative ml-4 hidden max-w-[370px] flex-1 md:block">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={17} />
             <input
@@ -991,6 +1030,7 @@ export const Index: React.FC = () => {
               {theme === 'light' ? '🌙' : '☀️'}
             </button>
 
+            {/* Profile Dropdown */}
             <div className="relative flex items-center gap-2">
               <button
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
@@ -1019,14 +1059,24 @@ export const Index: React.FC = () => {
               </button>
 
               {userDropdownOpen && (
-                <div className="absolute right-0 top-12 z-50 w-56 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-1.5 shadow-xl">
-                  <div className="p-2 border-b border-slate-100 dark:border-slate-800/80 mb-1">
+                <div className="absolute right-0 top-12 z-50 w-60 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-1.5 shadow-xl">
+                  <div className="p-2.5 border-b border-slate-100 dark:border-slate-800/80 mb-1">
                     <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{displayName}</p>
                     <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
                     <p className="mt-1 text-[9px] font-mono font-bold text-blue-600 dark:text-indigo-400 truncate">
                       {institutionDisplay}
                     </p>
                   </div>
+                  {/* Edit Profile Anytime Trigger */}
+                  <button
+                    onClick={() => {
+                      setUserDropdownOpen(false);
+                      setProfileModalOpen(true);
+                    }}
+                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+                  >
+                    <Settings2 size={15} /> Edit Profile Details
+                  </button>
                   <button
                     onClick={() => {
                       setUserDropdownOpen(false);
@@ -1052,9 +1102,17 @@ export const Index: React.FC = () => {
           } w-[250px] shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0B101E] px-4 py-6 lg:sticky lg:top-[72px] lg:flex lg:h-[calc(100vh-72px)] lg:flex-col shadow-xs`}
         >
           <div className="mb-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 p-3.5">
-            <p className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400">
-              {rawRole === 'admin' ? 'Central Governance' : 'Authenticated Registry'}
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400">
+                {rawRole === 'admin' ? 'Central Governance' : 'Authenticated Profile'}
+              </p>
+              <button
+                onClick={() => setProfileModalOpen(true)}
+                className="text-[10px] text-blue-600 dark:text-indigo-400 font-bold hover:underline"
+              >
+                Edit
+              </button>
+            </div>
             <p className="mt-1 text-xs font-extrabold text-slate-900 dark:text-white truncate">{displayName}</p>
             <p className="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400 truncate">{institutionDisplay}</p>
             <p className="mt-1 text-[9px] font-mono text-slate-400 dark:text-slate-500 truncate">
@@ -1078,7 +1136,7 @@ export const Index: React.FC = () => {
               }`}
             >
               <LayoutDashboard size={17} />
-              {rawRole === 'admin' ? 'Governance Hub' : 'Overview'}
+              {rawRole === 'admin' ? 'Governance Dashboard' : 'Overview'}
             </button>
 
             {rawRole !== 'admin' && (
@@ -1133,41 +1191,14 @@ export const Index: React.FC = () => {
             <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/20 text-blue-300">
               <Sparkles size={16} />
             </div>
-            <p className="text-xs font-bold">{roleDisplay} Tier Active</p>
-            <p className="mt-1 text-[10px] text-slate-400">Strict RBAC segregation enforced.</p>
+            <p className="text-xs font-bold">{roleDisplay} Clearance Active</p>
+            <p className="mt-1 text-[10px] text-slate-400">Mutual exclusivity enforced by RBAC.</p>
           </div>
         </aside>
 
-        {/* Dynamic Main Workspace Pane */}
+        {/* Main Workspace Pane */}
         <main className="min-w-0 flex-1 px-4 py-7 sm:px-7 lg:px-10 lg:py-9">
           <div className="mx-auto max-w-[1120px]">
-            {/* Institutional Announcement Banner */}
-            {announcements.length > 0 && (
-              <div className="mb-6 p-4 rounded-2xl border border-indigo-200 dark:border-indigo-900/60 bg-gradient-to-r from-blue-50 via-indigo-50/50 to-white dark:from-indigo-950/40 dark:via-slate-900 dark:to-slate-900 flex items-center justify-between shadow-xs">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-indigo-600 text-white shadow-xs">
-                    <Megaphone size={16} />
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-                      Central Announcement • {announcements[0].date}
-                    </span>
-                    <p className="text-xs font-bold text-slate-900 dark:text-white mt-0.5">
-                      {announcements[0].title}
-                    </p>
-                  </div>
-                </div>
-                {rawRole === 'admin' && (
-                  <button
-                    onClick={() => setAnnouncementsModalOpen(true)}
-                    className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline shrink-0"
-                  >
-                    + Post New
-                  </button>
-                )}
-              </div>
-            )}
-
             {/* Context Hero Header */}
             <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
@@ -1190,7 +1221,7 @@ export const Index: React.FC = () => {
                 </h1>
               </div>
 
-              {/* Action Trigger Buttons */}
+              {/* Action Buttons */}
               {rawRole === 'trainer' && (
                 <div className="flex items-center gap-2 flex-wrap">
                   <button
@@ -1220,7 +1251,7 @@ export const Index: React.FC = () => {
                     onClick={() => setAnnouncementsModalOpen(true)}
                     className="flex items-center gap-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 text-xs font-bold shadow-sm transition"
                   >
-                    <Megaphone size={14} /> Broadcast Announcement
+                    <Megaphone size={14} /> Post Announcement
                   </button>
                 </div>
               )}
@@ -1229,16 +1260,375 @@ export const Index: React.FC = () => {
             {/* TAB: OVERVIEW */}
             {workspaceTab === 'overview' && (
               <>
-                {rawRole === 'trainer' ? (
-                  /* LINKEDIN-STYLE FACULTY COMPETENCY PROFILE */
+                {/* =========================================================
+                   ADMIN LOGIN DASHBOARD: DATA VISUALIZATION & GOVERNANCE SUITE
+                   ========================================================= */}
+                {rawRole === 'admin' ? (
+                  <div className="space-y-8 mb-10">
+                    {/* Platform Traffic & Telemetry Cards */}
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                      <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs">
+                        <div className="flex items-center justify-between text-slate-400 text-xs">
+                          <span>Active Trainees</span>
+                          <Users size={16} className="text-indigo-600" />
+                        </div>
+                        <p className="mt-2 text-2xl font-black text-slate-900 dark:text-white">1,420</p>
+                        <span className="text-[10px] text-emerald-600 font-bold">↑ +18% Monthly Growth</span>
+                      </div>
+
+                      <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs">
+                        <div className="flex items-center justify-between text-slate-400 text-xs">
+                          <span>Verified Trainers</span>
+                          <Award size={16} className="text-cyan-600" />
+                        </div>
+                        <p className="mt-2 text-2xl font-black text-slate-900 dark:text-white">84</p>
+                        <span className="text-[10px] text-cyan-600 font-bold">4 Institutions Active</span>
+                      </div>
+
+                      <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs">
+                        <div className="flex items-center justify-between text-slate-400 text-xs">
+                          <span>Credentials Minted</span>
+                          <ShieldCheck size={16} className="text-emerald-600" />
+                        </div>
+                        <p className="mt-2 text-2xl font-black text-emerald-600 dark:text-emerald-400">612</p>
+                        <span className="text-[10px] text-slate-400 font-mono">100% SHA-256 Validated</span>
+                      </div>
+
+                      <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs">
+                        <div className="flex items-center justify-between text-slate-400 text-xs">
+                          <span>API Throughput</span>
+                          <Activity size={16} className="text-purple-600" />
+                        </div>
+                        <p className="mt-2 text-2xl font-black text-slate-900 dark:text-white">99.98%</p>
+                        <span className="text-[10px] text-emerald-600 font-bold">Zero Dropped Tasks</span>
+                      </div>
+                    </div>
+
+                    {/* Interactive SVG Platform Traffic & Growth Visualization */}
+                    <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <TrendingUp size={18} className="text-indigo-600 dark:text-indigo-400" />
+                            <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                              Live Platform Traffic & Telemetry Dynamics
+                            </h3>
+                          </div>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                            Real-time concurrent sessions across Trainee and Trainer nodes.
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-4 text-xs">
+                          <span className="flex items-center gap-1.5 font-bold text-indigo-600 dark:text-indigo-400">
+                            <span className="w-2.5 h-2.5 rounded-full bg-indigo-600" /> Trainee Activity
+                          </span>
+                          <span className="flex items-center gap-1.5 font-bold text-emerald-500">
+                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Trainer Checkpoints
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* SVG Line Graph Container */}
+                      <div className="pt-2">
+                        <svg viewBox="0 0 700 180" className="w-full h-44 overflow-visible">
+                          <defs>
+                            <linearGradient id="traineeTrafficGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor="#6366F1" stopOpacity="0.28" />
+                              <stop offset="100%" stopColor="#6366F1" stopOpacity="0.0" />
+                            </linearGradient>
+                            <linearGradient id="trainerTrafficGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor="#10B981" stopOpacity="0.2" />
+                              <stop offset="100%" stopColor="#10B981" stopOpacity="0.0" />
+                            </linearGradient>
+                          </defs>
+
+                          {/* Grid Lines */}
+                          <line x1="0" y1="30" x2="700" y2="30" stroke="currentColor" strokeOpacity="0.07" />
+                          <line x1="0" y1="80" x2="700" y2="80" stroke="currentColor" strokeOpacity="0.07" />
+                          <line x1="0" y1="130" x2="700" y2="130" stroke="currentColor" strokeOpacity="0.07" />
+
+                          {/* Trainee Traffic Area & Curve */}
+                          <path
+                            d="M 0 150 Q 80 120 140 100 T 280 70 T 420 40 T 560 55 T 700 20 L 700 180 L 0 180 Z"
+                            fill="url(#traineeTrafficGrad)"
+                          />
+                          <path
+                            d="M 0 150 Q 80 120 140 100 T 280 70 T 420 40 T 560 55 T 700 20"
+                            fill="none"
+                            stroke="#6366F1"
+                            strokeWidth="3.5"
+                            strokeLinecap="round"
+                          />
+
+                          {/* Trainer Traffic Area & Curve */}
+                          <path
+                            d="M 0 160 Q 80 150 140 140 T 280 125 T 420 110 T 560 95 T 700 80 L 700 180 L 0 180 Z"
+                            fill="url(#trainerTrafficGrad)"
+                          />
+                          <path
+                            d="M 0 160 Q 80 150 140 140 T 280 125 T 420 110 T 560 95 T 700 80"
+                            fill="none"
+                            stroke="#10B981"
+                            strokeWidth="2.5"
+                            strokeDasharray="4 4"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+
+                        <div className="flex justify-between text-[11px] text-slate-400 font-mono pt-2 border-t border-slate-100 dark:border-slate-800">
+                          <span>Apr 2026</span>
+                          <span>May 2026</span>
+                          <span>Jun 2026</span>
+                          <span>Jul 2026</span>
+                          <span>Aug 2026</span>
+                          <span className="font-bold text-slate-600 dark:text-slate-200">Sept 2026 (Live SIH Window)</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Admin Notice Board Management Suite (Slide 2: Announcements) */}
+                    <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-6">
+                      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                        <div className="flex items-center gap-2">
+                          <Megaphone size={18} className="text-purple-600 dark:text-purple-400" />
+                          <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                            Institutional Notice Entry Board
+                          </h3>
+                        </div>
+                        <span className="text-[10px] text-slate-400">Broadcasts sync to Pre-login and Post-login</span>
+                      </div>
+
+                      {/* Add Notice Form */}
+                      <form onSubmit={handleAddNotice} className="grid sm:grid-cols-12 gap-3 text-xs">
+                        <div className="sm:col-span-4">
+                          <input
+                            type="text"
+                            required
+                            placeholder="Notice Headline..."
+                            value={newNoticeTitle}
+                            onChange={(e) => setNewNoticeTitle(e.target.value)}
+                            className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white outline-none"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <select
+                            value={newNoticeCategory}
+                            onChange={(e: any) => setNewNoticeCategory(e.target.value)}
+                            className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white outline-none"
+                          >
+                            <option value="Academic">Academic</option>
+                            <option value="Accreditation">Accreditation</option>
+                            <option value="Governance">Governance</option>
+                            <option value="System">System</option>
+                          </select>
+                        </div>
+                        <div className="sm:col-span-4">
+                          <input
+                            type="text"
+                            required
+                            placeholder="Notice description or directive..."
+                            value={newNoticeContent}
+                            onChange={(e) => setNewNoticeContent(e.target.value)}
+                            className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white outline-none"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <button
+                            type="submit"
+                            className="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold transition shadow-xs"
+                          >
+                            + Publish
+                          </button>
+                        </div>
+                      </form>
+
+                      {/* Active Notices Table */}
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left text-xs">
+                          <thead>
+                            <tr className="border-b border-slate-100 dark:border-slate-800 text-slate-400 font-semibold">
+                              <th className="pb-2">Category</th>
+                              <th className="pb-2">Headline</th>
+                              <th className="pb-2">Date</th>
+                              <th className="pb-2">Status</th>
+                              <th className="pb-2 text-right">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                            {notices.map((n) => (
+                              <tr key={n.id} className="hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                                <td className="py-2.5 font-bold">
+                                  <span className="px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 text-[10px]">
+                                    {n.category}
+                                  </span>
+                                </td>
+                                <td className="py-2.5 font-bold text-slate-900 dark:text-white max-w-xs truncate">
+                                  {n.title}
+                                </td>
+                                <td className="py-2.5 text-slate-400 font-mono text-[11px]">{n.date}</td>
+                                <td className="py-2.5">
+                                  <button
+                                    onClick={() => handleToggleNoticePublic(n.id)}
+                                    className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                      n.isPublic ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-500'
+                                    }`}
+                                  >
+                                    {n.isPublic ? 'Public Feed' : 'Hidden'}
+                                  </button>
+                                </td>
+                                <td className="py-2.5 text-right">
+                                  <button
+                                    onClick={() => handleDeleteNotice(n.id)}
+                                    className="text-rose-500 hover:text-rose-700 p-1"
+                                  >
+                                    <Trash2 size={14} />
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* Central User Directory & Role Compliance Table */}
+                    <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-4">
+                      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                        <div className="flex items-center gap-2">
+                          <Users size={18} className="text-blue-600 dark:text-indigo-400" />
+                          <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                            Institutional User Management Ledger
+                          </h3>
+                        </div>
+                        <span className="text-[10px] text-slate-400">Manage Trainee and Faculty Node Clearances</span>
+                      </div>
+
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left text-xs">
+                          <thead>
+                            <tr className="border-b border-slate-100 dark:border-slate-800 text-slate-400 font-semibold">
+                              <th className="pb-2">User Name</th>
+                              <th className="pb-2">Role Scope</th>
+                              <th className="pb-2">Institution</th>
+                              <th className="pb-2">Clearance Status</th>
+                              <th className="pb-2 text-right">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                            {managedUsers.map((u) => (
+                              <tr key={u.id} className="hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                                <td className="py-2.5 font-bold text-slate-900 dark:text-white">{u.name}</td>
+                                <td className="py-2.5">
+                                  <span
+                                    className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                      u.role === 'Trainer'
+                                        ? 'bg-cyan-50 text-cyan-600 dark:bg-cyan-950 dark:text-cyan-400'
+                                        : 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400'
+                                    }`}
+                                  >
+                                    {u.role}
+                                  </span>
+                                </td>
+                                <td className="py-2.5 text-slate-500 dark:text-slate-400">{u.institution}</td>
+                                <td className="py-2.5">
+                                  <span
+                                    className={`font-semibold text-[11px] ${
+                                      u.status === 'Active' || u.status === 'Verified' ? 'text-emerald-500' : 'text-rose-500'
+                                    }`}
+                                  >
+                                    ● {u.status}
+                                  </span>
+                                </td>
+                                <td className="py-2.5 text-right">
+                                  <button
+                                    onClick={() => handleToggleUserStatus(u.id)}
+                                    className="text-[11px] font-bold text-blue-600 dark:text-indigo-400 hover:underline"
+                                  >
+                                    {u.status === 'Active' ? 'Suspend' : 'Reinstate'}
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* Course Catalog Regulation (Admin Visibility & Deletion) */}
+                    <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] shadow-xs space-y-4">
+                      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                        <div className="flex items-center gap-2">
+                          <BookOpen size={18} className="text-emerald-600" />
+                          <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                            Public Curriculum Regulation
+                          </h3>
+                        </div>
+                        <span className="text-[10px] text-slate-400">Manage course visibility in marketplace</span>
+                      </div>
+
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left text-xs">
+                          <thead>
+                            <tr className="border-b border-slate-100 dark:border-slate-800 text-slate-400 font-semibold">
+                              <th className="pb-2">Track Code</th>
+                              <th className="pb-2">Title</th>
+                              <th className="pb-2">Faculty Lead</th>
+                              <th className="pb-2">Marketplace Visibility</th>
+                              <th className="pb-2 text-right">Admin Controls</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                            {courses.map((c) => (
+                              <tr key={c.id} className="hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                                <td className="py-2.5 font-mono text-[11px] text-indigo-600 dark:text-indigo-400">{c.code}</td>
+                                <td className="py-2.5 font-bold text-slate-900 dark:text-white">{c.title}</td>
+                                <td className="py-2.5 text-slate-500">{c.instructor}</td>
+                                <td className="py-2.5">
+                                  <span
+                                    className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                      c.isPublic ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-500'
+                                    }`}
+                                  >
+                                    {c.isPublic ? 'Published' : 'Hidden'}
+                                  </span>
+                                </td>
+                                <td className="py-2.5 text-right flex items-center justify-end gap-2">
+                                  <button
+                                    onClick={() => handleToggleCourseVisibility(c.id)}
+                                    className="p-1 text-slate-500 hover:text-slate-800 dark:hover:text-white"
+                                    title="Toggle Visibility"
+                                  >
+                                    {c.isPublic ? <EyeOff size={14} /> : <Eye size={14} />}
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteCourse(c.id)}
+                                    className="p-1 text-rose-500 hover:text-rose-700"
+                                    title="Delete Course"
+                                  >
+                                    <Trash2 size={14} />
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                ) : rawRole === 'trainer' ? (
+                  /* =========================================================
+                     LINKEDIN-STYLE FACULTY COMPETENCY PROFILE (TRAINER VIEW)
+                     ========================================================= */
                   <div className="space-y-6 mb-10">
                     <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] overflow-hidden shadow-xs">
                       <div className="h-32 bg-gradient-to-r from-blue-700 via-indigo-700 to-cyan-600 relative">
                         <div className="absolute top-3 right-4 flex items-center gap-2">
-                          <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[11px] font-bold border border-white/30 flex items-center gap-1.5">
-                            <ShieldCheck size={13} className="text-emerald-300" />
-                            Verified Institutional Faculty
-                          </span>
+                          <button
+                            onClick={() => setProfileModalOpen(true)}
+                            className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[11px] font-bold border border-white/30 hover:bg-white/30 transition flex items-center gap-1.5"
+                          >
+                            <Settings2 size={13} /> Edit Faculty Profile
+                          </button>
                         </div>
                       </div>
 
@@ -1261,7 +1651,7 @@ export const Index: React.FC = () => {
                                 {TRAINER_LINKEDIN_DATA.DEFAULT.headline}
                               </p>
                               <p className="text-[11px] text-slate-400 mt-0.5">
-                                {TRAINER_LINKEDIN_DATA.DEFAULT.location}
+                                {institutionDisplay} • New Delhi, India
                               </p>
                             </div>
                           </div>
@@ -1388,20 +1778,18 @@ export const Index: React.FC = () => {
                     </div>
                   </div>
                 ) : (
-                  /* STANDARD 4 STAT CARDS (TRAINEE & ADMIN OVERVIEW) */
+                  /* =========================================================
+                     STANDARD 4 STAT CARDS (TRAINEE OVERVIEW)
+                     ========================================================= */
                   <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
                     <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
-                      <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">
-                        {rawRole === 'admin' ? 'Managed Tracks' : 'Enrolled Tracks'}
-                      </p>
+                      <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">Enrolled Tracks</p>
                       <p className="mt-2 text-[24px] font-extrabold text-slate-900 dark:text-white">
-                        {courses.filter((c) => (rawRole === 'trainee' ? c.enrolled : true)).length}
+                        {courses.filter((c) => c.enrolled).length}
                       </p>
                     </div>
                     <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
-                      <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">
-                        {rawRole === 'admin' ? 'Total Checkpoints' : 'Available Checkpoints'}
-                      </p>
+                      <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">Available Checkpoints</p>
                       <p className="mt-2 text-[24px] font-extrabold text-slate-900 dark:text-white">
                         {assessmentsList.length}
                       </p>
@@ -1417,41 +1805,7 @@ export const Index: React.FC = () => {
                   </div>
                 )}
 
-                {/* Admin Trainer Approval Queue */}
-                {rawRole === 'admin' && pendingTrainers.length > 0 && (
-                  <div className="mt-8 rounded-2xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/40 dark:bg-amber-950/20 p-5 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-extrabold text-xs uppercase tracking-wider">
-                        <UserCheck size={16} /> Pending Trainer Verification Queue ({pendingTrainers.length})
-                      </div>
-                      <span className="text-[10px] text-amber-600 dark:text-amber-400">Admin Clearance Required</span>
-                    </div>
-
-                    <div className="space-y-2">
-                      {pendingTrainers.map((pt) => (
-                        <div
-                          key={pt.id}
-                          className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-amber-200/60 dark:border-amber-900/40 flex items-center justify-between text-xs"
-                        >
-                          <div>
-                            <span className="font-bold text-slate-900 dark:text-white">{pt.name}</span>
-                            <span className="text-slate-400 ml-2">• {pt.institution} ({pt.domain})</span>
-                          </div>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleApproveTrainer(pt.id)}
-                              className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px]"
-                            >
-                              Verify & Approve
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Course Directory / Open Library Marketplace */}
+                {/* Course Directory / Open Library Marketplace (Visible to all) */}
                 <div className="mt-9">
                   <div className="flex items-center justify-between">
                     <div>
@@ -1498,7 +1852,6 @@ export const Index: React.FC = () => {
 
                         <div className="p-4 flex flex-col justify-between grow space-y-4">
                           <div>
-                            {/* Learner-Visible Trainer Competency Trigger */}
                             <button
                               onClick={() => {
                                 const profile = TRAINER_PROFILES[c.instructor] || {
@@ -1687,7 +2040,7 @@ export const Index: React.FC = () => {
         </main>
       </div>
 
-      {/* Dynamic Interactive Quiz Engine Modal */}
+      {/* Quiz Engine Modal */}
       {activeQuizItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm">
           <div className="w-full max-w-lg rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-6 shadow-2xl">
@@ -1868,9 +2221,16 @@ export const Index: React.FC = () => {
         </div>
       )}
 
-      {/* Global Modals */}
+      {/* Global & Feature Modals */}
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
       
+      <ProfileSettingsModal
+        isOpen={profileModalOpen}
+        user={user}
+        onClose={() => setProfileModalOpen(false)}
+        onSave={handleProfileSave}
+      />
+
       <CreateModuleModal
         isOpen={createModuleOpen}
         courseId={courses[0]?.id || 1}
@@ -1920,7 +2280,6 @@ export const Index: React.FC = () => {
         />
       )}
 
-      {/* SIH Specified Feature Modals */}
       <TrainerProfileModal
         isOpen={!!activeTrainerProfile}
         trainer={activeTrainerProfile}
@@ -1946,10 +2305,16 @@ export const Index: React.FC = () => {
         isOpen={announcementsModalOpen}
         onClose={() => setAnnouncementsModalOpen(false)}
         onBroadcast={(ann) => {
-          setAnnouncements((prev) => [
-            { id: Date.now(), title: ann.title, date: 'Today', author: displayName },
-            ...prev,
-          ]);
+          const created: NoticeItem = {
+            id: Date.now(),
+            title: ann.title,
+            category: 'System',
+            content: ann.content,
+            date: 'Today',
+            author: displayName,
+            isPublic: true,
+          };
+          setNotices((prev) => [created, ...prev]);
         }}
       />
     </div>
