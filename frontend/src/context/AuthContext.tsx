@@ -19,14 +19,36 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
+  const [token, setToken] = useState<string | null>(() => {
+    try {
+      const savedToken = localStorage.getItem('token');
+      return (savedToken && savedToken !== 'undefined' && savedToken !== 'null') ? savedToken : null;
+    } catch {
+      return null;
+    }
+  });
+
   const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('user');
+      if (!saved || saved === 'undefined' || saved === 'null') {
+        return null;
+      }
+      return JSON.parse(saved);
+    } catch (e) {
+      console.warn('Failed to parse saved user from localStorage', e);
+      localStorage.removeItem('user');
+      return null;
+    }
   });
 
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    return (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
+    try {
+      const saved = localStorage.getItem('theme');
+      return (saved === 'dark' || saved === 'light') ? saved : 'light';
+    } catch {
+      return 'light';
+    }
   });
 
   useEffect(() => {
@@ -44,6 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const login = (newToken: string, newUser: User) => {
+    if (!newToken || !newUser) return;
     localStorage.setItem('token', newToken);
     localStorage.setItem('user', JSON.stringify(newUser));
     setToken(newToken);
@@ -69,3 +92,5 @@ export const useAuth = () => {
   if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
+
+export default AuthContext;
