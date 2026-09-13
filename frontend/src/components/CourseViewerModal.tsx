@@ -262,3 +262,5 @@ export function CourseViewerModal({
     </div>
   );
 }
+export default CourseViewerModal;
+export { CourseViewerModal };

@@ -320,3 +320,5 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     </div>
   );
 }
+export default AuthModal;
+export { AuthModal };

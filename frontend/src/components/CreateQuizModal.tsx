@@ -198,3 +198,5 @@ export function CreateQuizModal({ isOpen, onClose, onSave }: CreateQuizModalProp
     </div>
   );
 }
+export default CreateQuizModal;
+export { CreateQuizModal };

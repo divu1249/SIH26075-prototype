@@ -137,3 +137,5 @@ export function CreateModuleModal({ isOpen, onClose, onCreated }: CreateModuleMo
     </div>
   );
 }
+export default CreateModuleModal;
+export { CreateModuleModal };

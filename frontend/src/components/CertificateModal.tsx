@@ -85,3 +85,5 @@ export function CertificateModal({
     </div>
   );
 }
+export default CertificateModal;
+export { CertificateModal };
