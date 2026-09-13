@@ -234,7 +234,7 @@ export const Index: React.FC = () => {
       .catch(() => console.log('Serving synchronized local courses.'));
   }, [apiBaseUrl]);
 
-  // Normalized User Persona Details
+  // Normalized Identity
   const displayName = useMemo(() => {
     if (!user) return 'Candidate';
     if ((user as any).fullName) return (user as any).fullName;
@@ -551,15 +551,15 @@ export const Index: React.FC = () => {
   }
 
   // =========================================================================
-  // POST-LOGIN DISPLAY (MATCHING INDEXREF.TXT ARCHITECTURE & SPECIFICATIONS)
+  // POST-LOGIN DISPLAY (COMPREHENSIVE DARK & LIGHT MODE ADAPTATION)
   // =========================================================================
   return (
-    <div className="min-h-screen bg-[#f6f8fc] text-slate-900 font-sans">
+    <div className="min-h-screen bg-[#f6f8fc] dark:bg-[#070B14] text-slate-900 dark:text-slate-100 transition-colors duration-200 font-sans">
       {/* GLOBAL HEADER */}
-      <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl shadow-xs">
+      <header className="sticky top-0 z-30 border-b border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-[#0B101E]/90 backdrop-blur-xl shadow-xs">
         <div className="mx-auto flex h-[72px] max-w-[1440px] items-center gap-5 px-4 sm:px-7 lg:px-10">
           <button
-            className="mr-1 rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden"
+            className="mr-1 rounded-lg p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden"
             onClick={() => setMobileNav(!mobileNav)}
             aria-label="Toggle navigation"
           >
@@ -568,14 +568,14 @@ export const Index: React.FC = () => {
 
           <AcademiaLogo size={34} />
 
-          {/* Search Bar */}
+          {/* Search Input */}
           <div className="relative ml-4 hidden max-w-[370px] flex-1 md:block">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={17} />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={17} />
             <input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search modules, skills, or curriculum..."
-              className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-xs outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
+              className="h-10 w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/90 pl-10 pr-4 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition focus:border-blue-500 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-50 dark:focus:ring-indigo-950/30"
             />
           </div>
 
@@ -583,7 +583,7 @@ export const Index: React.FC = () => {
           <div className="ml-auto flex items-center gap-3">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition"
+              className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
               aria-label="Toggle Theme"
             >
               {theme === 'light' ? '🌙' : '☀️'}
@@ -592,21 +592,23 @@ export const Index: React.FC = () => {
             <div className="relative flex items-center gap-2">
               <button
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-white p-1.5 pr-3 shadow-xs hover:bg-slate-50 transition"
+                className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-1.5 pr-3 shadow-xs hover:bg-slate-50 dark:hover:bg-slate-800 transition"
               >
                 <div
                   className={`h-8 w-8 rounded-lg flex items-center justify-center font-bold text-xs ${
-                    rawRole === 'admin' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'
+                    rawRole === 'admin'
+                      ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
+                      : 'bg-blue-100 text-blue-700 dark:bg-indigo-950/80 dark:text-indigo-300'
                   }`}
                 >
                   {displayName.slice(0, 2).toUpperCase()}
                 </div>
                 <div className="hidden text-left sm:block">
-                  <span className="block text-xs font-bold text-slate-900 leading-tight">
+                  <span className="block text-xs font-bold text-slate-900 dark:text-white leading-tight">
                     {displayName}
                   </span>
-                  <span className="block text-[10px] font-medium text-slate-400 leading-tight">
-                    <span className={`font-semibold ${rawRole === 'admin' ? 'text-amber-600' : 'text-blue-600'}`}>
+                  <span className="block text-[10px] font-medium text-slate-400 dark:text-slate-400 leading-tight">
+                    <span className={`font-semibold ${rawRole === 'admin' ? 'text-amber-600 dark:text-amber-400' : 'text-blue-600 dark:text-indigo-400'}`}>
                       {roleDisplay}
                     </span>
                   </span>
@@ -615,11 +617,11 @@ export const Index: React.FC = () => {
               </button>
 
               {userDropdownOpen && (
-                <div className="absolute right-0 top-12 z-50 w-56 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl">
-                  <div className="p-2 border-b border-slate-100 mb-1">
-                    <p className="text-xs font-bold text-slate-900 truncate">{displayName}</p>
+                <div className="absolute right-0 top-12 z-50 w-56 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-1.5 shadow-xl">
+                  <div className="p-2 border-b border-slate-100 dark:border-slate-800/80 mb-1">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{displayName}</p>
                     <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
-                    <p className="mt-1 text-[9px] font-mono font-bold text-blue-600 truncate">
+                    <p className="mt-1 text-[9px] font-mono font-bold text-blue-600 dark:text-indigo-400 truncate">
                       {institutionDisplay}
                     </p>
                   </div>
@@ -628,7 +630,7 @@ export const Index: React.FC = () => {
                       setUserDropdownOpen(false);
                       setShowLogoutConfirm(true);
                     }}
-                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs font-semibold text-rose-600 hover:bg-rose-50"
+                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30"
                   >
                     <LogOut size={15} /> Sign out
                   </button>
@@ -645,15 +647,15 @@ export const Index: React.FC = () => {
         <aside
           className={`${
             mobileNav ? 'fixed inset-y-[72px] left-0 z-20 flex' : 'hidden'
-          } w-[250px] shrink-0 border-r border-slate-200 bg-white px-4 py-6 lg:sticky lg:top-[72px] lg:flex lg:h-[calc(100vh-72px)] lg:flex-col shadow-xs`}
+          } w-[250px] shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0B101E] px-4 py-6 lg:sticky lg:top-[72px] lg:flex lg:h-[calc(100vh-72px)] lg:flex-col shadow-xs`}
         >
-          <div className="mb-6 rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5">
+          <div className="mb-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 p-3.5">
             <p className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400">
               {rawRole === 'admin' ? 'System Clearance' : 'Authenticated Registry'}
             </p>
-            <p className="mt-1 text-xs font-extrabold text-slate-900 truncate">{displayName}</p>
-            <p className="mt-0.5 text-[10px] text-slate-500 truncate">{institutionDisplay}</p>
-            <p className="mt-1 text-[9px] font-mono text-slate-400 truncate">
+            <p className="mt-1 text-xs font-extrabold text-slate-900 dark:text-white truncate">{displayName}</p>
+            <p className="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400 truncate">{institutionDisplay}</p>
+            <p className="mt-1 text-[9px] font-mono text-slate-400 dark:text-slate-500 truncate">
               ID: ACAD-{user.id || '9021'}
             </p>
           </div>
@@ -669,8 +671,8 @@ export const Index: React.FC = () => {
               }}
               className={`flex w-full items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-xs font-bold transition ${
                 workspaceTab === 'overview'
-                  ? 'bg-blue-50 text-blue-600 font-extrabold shadow-xs'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  ? 'bg-blue-50 dark:bg-indigo-950/60 text-blue-600 dark:text-indigo-400 font-extrabold shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <LayoutDashboard size={17} />
@@ -686,8 +688,8 @@ export const Index: React.FC = () => {
                   }}
                   className={`flex w-full items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-xs font-bold transition ${
                     workspaceTab === 'learning'
-                      ? 'bg-blue-50 text-blue-600 font-extrabold shadow-xs'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                      ? 'bg-blue-50 dark:bg-indigo-950/60 text-blue-600 dark:text-indigo-400 font-extrabold shadow-xs'
+                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   <BookOpen size={17} />
@@ -700,8 +702,8 @@ export const Index: React.FC = () => {
                   }}
                   className={`flex w-full items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-xs font-bold transition ${
                     workspaceTab === 'assessments'
-                      ? 'bg-blue-50 text-blue-600 font-extrabold shadow-xs'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                      ? 'bg-blue-50 dark:bg-indigo-950/60 text-blue-600 dark:text-indigo-400 font-extrabold shadow-xs'
+                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   <FileCheck2 size={17} />
@@ -714,8 +716,8 @@ export const Index: React.FC = () => {
                   }}
                   className={`flex w-full items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-xs font-bold transition ${
                     workspaceTab === 'progress'
-                      ? 'bg-blue-50 text-blue-600 font-extrabold shadow-xs'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                      ? 'bg-blue-50 dark:bg-indigo-950/60 text-blue-600 dark:text-indigo-400 font-extrabold shadow-xs'
+                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   <BarChart3 size={17} />
@@ -725,7 +727,7 @@ export const Index: React.FC = () => {
             )}
           </nav>
 
-          <div className="mt-auto rounded-2xl bg-[#0b1736] p-4 text-white">
+          <div className="mt-auto rounded-2xl bg-[#0b1736] dark:bg-slate-900 border border-transparent dark:border-slate-800 p-4 text-white">
             <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/20 text-blue-300">
               <Sparkles size={16} />
             </div>
@@ -743,14 +745,16 @@ export const Index: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <span
                     className={`rounded-md px-2.5 py-1 text-[10px] font-extrabold uppercase ${
-                      rawRole === 'admin' ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'
+                      rawRole === 'admin'
+                        ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60'
+                        : 'bg-blue-50 dark:bg-indigo-950/60 text-blue-700 dark:text-indigo-300 border border-blue-200 dark:border-indigo-800/60'
                     }`}
                   >
                     {roleDisplay} Console
                   </span>
                   <span className="text-xs font-medium text-slate-400">• {institutionDisplay}</span>
                 </div>
-                <h1 className="mt-2 text-[26px] font-extrabold tracking-tight text-slate-950 sm:text-[32px]">
+                <h1 className="mt-2 text-[26px] font-extrabold tracking-tight text-slate-950 dark:text-white sm:text-[32px]">
                   {rawRole === 'trainee' && `Welcome back, ${displayName.split(' ')[0]}!`}
                   {rawRole === 'trainer' && `Educator Workspace • ${displayName}`}
                   {rawRole === 'admin' && 'Central Governance & Accreditation Portal'}
@@ -761,13 +765,13 @@ export const Index: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setCreateQuizOpen(true)}
-                    className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-bold text-slate-700 shadow-xs hover:bg-slate-50 transition"
+                    className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 shadow-xs hover:bg-slate-50 dark:hover:bg-slate-800 transition"
                   >
-                    <Award size={15} className="text-blue-600" /> Create Checkpoint
+                    <Award size={15} className="text-blue-600 dark:text-indigo-400" /> Create Checkpoint
                   </button>
                   <button
                     onClick={() => setCreateModuleOpen(true)}
-                    className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-blue-700 transition"
+                    className="flex items-center gap-1.5 rounded-xl bg-blue-600 dark:bg-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-blue-700 dark:hover:bg-indigo-500 transition"
                   >
                     <PlusCircle size={15} /> Publish Course
                   </button>
@@ -784,44 +788,44 @@ export const Index: React.FC = () => {
                 {workspaceTab === 'overview' && (
                   <>
                     <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-                      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
-                        <p className="text-[12px] font-medium text-slate-500">
+                      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
+                        <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">
                           {rawRole === 'trainer' ? 'Published Modules' : 'Enrolled Modules'}
                         </p>
-                        <p className="mt-2 text-[24px] font-extrabold text-slate-900">{courses.length}</p>
+                        <p className="mt-2 text-[24px] font-extrabold text-slate-900 dark:text-white">{courses.length}</p>
                       </div>
-                      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
-                        <p className="text-[12px] font-medium text-slate-500">
+                      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
+                        <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">
                           {rawRole === 'trainer' ? 'Active Checkpoints' : 'Assessments Done'}
                         </p>
-                        <p className="mt-2 text-[24px] font-extrabold text-slate-900">
+                        <p className="mt-2 text-[24px] font-extrabold text-slate-900 dark:text-white">
                           {rawRole === 'trainer' ? assessmentsList.length : '18'}
                         </p>
                       </div>
-                      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
-                        <p className="text-[12px] font-medium text-slate-500">Average Performance</p>
-                        <p className="mt-2 text-[24px] font-extrabold text-emerald-600">89.2%</p>
+                      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
+                        <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">Average Performance</p>
+                        <p className="mt-2 text-[24px] font-extrabold text-emerald-600 dark:text-emerald-400">89.2%</p>
                       </div>
-                      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
-                        <p className="text-[12px] font-medium text-slate-500">Accreditation</p>
-                        <p className="mt-2 text-[24px] font-extrabold text-blue-600">Verified</p>
+                      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-4 shadow-xs">
+                        <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400">Accreditation</p>
+                        <p className="mt-2 text-[24px] font-extrabold text-blue-600 dark:text-indigo-400">Verified</p>
                       </div>
                     </div>
 
                     <div className="mt-9">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h2 className="text-lg font-extrabold tracking-tight text-slate-900">
+                          <h2 className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white">
                             Institutional Course Library
                           </h2>
-                          <p className="text-xs text-slate-500">
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
                             Accredited curricula available under your institutional scope.
                           </p>
                         </div>
                         {rawRole === 'trainer' && (
                           <button
                             onClick={() => setCreateModuleOpen(true)}
-                            className="text-xs font-bold text-blue-600 hover:text-blue-700"
+                            className="text-xs font-bold text-blue-600 dark:text-indigo-400 hover:underline"
                           >
                             + Add New
                           </button>
@@ -832,7 +836,7 @@ export const Index: React.FC = () => {
                         {filteredCourses.map((c) => (
                           <div
                             key={c.id}
-                            className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-xs transition hover:shadow-lg"
+                            className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] overflow-hidden shadow-xs transition hover:shadow-lg"
                           >
                             <div
                               onClick={() => openLessonViewer(c)}
@@ -847,17 +851,17 @@ export const Index: React.FC = () => {
                               </div>
                             </div>
                             <div className="p-4">
-                              <p className="text-[11px] text-slate-500">Faculty: {c.instructor}</p>
+                              <p className="text-[11px] text-slate-500 dark:text-slate-400">Faculty: {c.instructor}</p>
                               <div className="mt-4 flex gap-2">
                                 <button
                                   onClick={() => openLessonViewer(c)}
-                                  className="flex-1 rounded-lg border border-slate-200 py-2 text-[11px] font-bold text-slate-700 hover:bg-slate-50 transition"
+                                  className="flex-1 rounded-lg border border-slate-200 dark:border-slate-700 py-2 text-[11px] font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
                                 >
                                   Resume Module
                                 </button>
                                 <button
                                   onClick={() => startAssessment(c.title)}
-                                  className="flex-1 rounded-lg bg-blue-600 py-2 text-[11px] font-bold text-white hover:bg-blue-700 transition"
+                                  className="flex-1 rounded-lg bg-blue-600 dark:bg-indigo-600 py-2 text-[11px] font-bold text-white hover:bg-blue-700 dark:hover:bg-indigo-500 transition"
                                 >
                                   Checkpoint
                                 </button>
@@ -872,20 +876,20 @@ export const Index: React.FC = () => {
 
                 {/* TAB: LEARNING */}
                 {workspaceTab === 'learning' && (
-                  <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-6 shadow-xs">
+                    <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-4">
                       <div>
-                        <h2 className="text-lg font-extrabold tracking-tight text-slate-900">
+                        <h2 className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white">
                           {rawRole === 'trainer' ? 'Curriculum Asset Management' : 'My Enrolled Curriculum'}
                         </h2>
-                        <p className="text-xs text-slate-500">
-                          Full course materials, implementation code blueprints, and lecture notes.
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                          Full course materials, implementation blueprints, and lecture notes.
                         </p>
                       </div>
                       {rawRole === 'trainer' && (
                         <button
                           onClick={() => setCreateModuleOpen(true)}
-                          className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700"
+                          className="flex items-center gap-1.5 rounded-xl bg-blue-600 dark:bg-indigo-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700 dark:hover:bg-indigo-500"
                         >
                           <Plus size={14} /> New Module
                         </button>
@@ -896,17 +900,17 @@ export const Index: React.FC = () => {
                       {courses.map((c) => (
                         <div
                           key={c.id}
-                          className="flex items-center justify-between rounded-xl border border-slate-100 p-4 hover:bg-slate-50 transition"
+                          className="flex items-center justify-between rounded-xl border border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/40 p-4 hover:bg-slate-100/60 dark:hover:bg-slate-800/50 transition"
                         >
                           <div>
-                            <p className="text-xs font-extrabold text-slate-900">{c.title}</p>
-                            <p className="text-[11px] text-slate-500">
+                            <p className="text-xs font-extrabold text-slate-900 dark:text-white">{c.title}</p>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400">
                               {c.lessons} • {c.instructor}
                             </p>
                           </div>
                           <button
                             onClick={() => openLessonViewer(c)}
-                            className="rounded-lg bg-slate-950 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-blue-600 transition"
+                            className="rounded-lg bg-slate-950 dark:bg-slate-800 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-blue-600 dark:hover:bg-indigo-600 transition"
                           >
                             Access Curriculum Reader
                           </button>
@@ -918,15 +922,15 @@ export const Index: React.FC = () => {
 
                 {/* TAB: ASSESSMENTS */}
                 {workspaceTab === 'assessments' && (
-                  <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-6 shadow-xs">
+                    <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-4">
                       <div>
-                        <h2 className="text-lg font-extrabold tracking-tight text-slate-900">
+                        <h2 className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white">
                           {rawRole === 'trainer'
                             ? 'Question Bank & Assessment Studio'
                             : 'Automated Evaluation Engine'}
                         </h2>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
                           {rawRole === 'trainer'
                             ? 'Author questions and adjust pass criteria.'
                             : 'Instant test evaluation with tamper-resistant validation.'}
@@ -935,7 +939,7 @@ export const Index: React.FC = () => {
                       {rawRole === 'trainer' && (
                         <button
                           onClick={() => setCreateQuizOpen(true)}
-                          className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700"
+                          className="flex items-center gap-1.5 rounded-xl bg-blue-600 dark:bg-indigo-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700 dark:hover:bg-indigo-500"
                         >
                           <Award size={14} /> Author Checkpoint
                         </button>
@@ -946,17 +950,17 @@ export const Index: React.FC = () => {
                       {assessmentsList.map((a) => (
                         <div
                           key={a.id}
-                          className="flex items-center justify-between rounded-xl border border-slate-100 p-4 hover:bg-slate-50 transition"
+                          className="flex items-center justify-between rounded-xl border border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/40 p-4 hover:bg-slate-100/60 dark:hover:bg-slate-800/50 transition"
                         >
                           <div>
-                            <p className="text-xs font-extrabold text-slate-900">{a.title}</p>
-                            <p className="text-[11px] text-slate-500">
+                            <p className="text-xs font-extrabold text-slate-900 dark:text-white">{a.title}</p>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400">
                               {a.questionsCount} Modular Questions • {a.duration} • Pass: {a.passingScore}%
                             </p>
                           </div>
                           <button
                             onClick={() => startAssessment(a.title)}
-                            className="rounded-lg bg-blue-600 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-blue-700 transition"
+                            className="rounded-lg bg-blue-600 dark:bg-indigo-600 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-blue-700 dark:hover:bg-indigo-500 transition"
                           >
                             {rawRole === 'trainer' ? 'Preview Checkpoint' : 'Start Test'}
                           </button>
@@ -967,9 +971,7 @@ export const Index: React.FC = () => {
                 )}
 
                 {/* TAB: PROGRESS */}
-                {workspaceTab === 'progress' && (
-                  <AnalyticsView />
-                )}
+                {workspaceTab === 'progress' && <AnalyticsView />}
               </>
             )}
           </div>
@@ -978,18 +980,18 @@ export const Index: React.FC = () => {
 
       {/* QUIZ ENGINE MODAL */}
       {activeQuizItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-lg rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-6 shadow-2xl">
             <div className="flex items-start justify-between">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-indigo-400">
                   Evaluation Checkpoint
                 </span>
-                <h2 className="text-lg font-extrabold text-slate-950">{activeQuizItem.title}</h2>
+                <h2 className="text-lg font-extrabold text-slate-950 dark:text-white">{activeQuizItem.title}</h2>
               </div>
               <button
                 onClick={() => setActiveQuizItem(null)}
-                className="rounded-lg p-2 text-slate-400 hover:bg-slate-100"
+                className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
               >
                 <X size={18} />
               </button>
@@ -1000,7 +1002,7 @@ export const Index: React.FC = () => {
                 <p className="text-xs font-bold text-slate-400">
                   Question {quizStep + 1} of {activeQuizItem.questions.length}
                 </p>
-                <p className="mt-2 text-sm font-semibold text-slate-900">
+                <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
                   {activeQuizItem.questions[quizStep].q}
                 </p>
 
@@ -1011,8 +1013,8 @@ export const Index: React.FC = () => {
                       onClick={() => setSelectedAnswers({ ...selectedAnswers, [quizStep]: optIdx })}
                       className={`w-full rounded-xl border p-3 text-left text-xs font-medium transition ${
                         selectedAnswers[quizStep] === optIdx
-                          ? 'border-blue-600 bg-blue-50 text-blue-700 font-bold'
-                          : 'border-slate-200 hover:bg-slate-50 text-slate-700'
+                          ? 'border-blue-600 dark:border-indigo-500 bg-blue-50 dark:bg-indigo-950/60 text-blue-700 dark:text-indigo-300 font-bold'
+                          : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-300'
                       }`}
                     >
                       {opt}
@@ -1024,14 +1026,14 @@ export const Index: React.FC = () => {
                   <button
                     disabled={quizStep === 0}
                     onClick={() => setQuizStep(quizStep - 1)}
-                    className="rounded-lg px-3 py-2 text-xs font-bold text-slate-500 disabled:opacity-30"
+                    className="rounded-lg px-3 py-2 text-xs font-bold text-slate-500 dark:text-slate-400 disabled:opacity-30"
                   >
                     Previous
                   </button>
                   {quizStep < activeQuizItem.questions.length - 1 ? (
                     <button
                       onClick={() => setQuizStep(quizStep + 1)}
-                      className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700"
+                      className="rounded-lg bg-blue-600 dark:bg-indigo-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 dark:hover:bg-indigo-500"
                     >
                       Next
                     </button>
@@ -1052,13 +1054,13 @@ export const Index: React.FC = () => {
                   className={`mx-auto ${gradingResult.passed ? 'text-emerald-500' : 'text-amber-500'}`}
                   size={48}
                 />
-                <h3 className="mt-3 text-lg font-extrabold text-slate-950">
+                <h3 className="mt-3 text-lg font-extrabold text-slate-950 dark:text-white">
                   {gradingResult.passed ? 'Assessment Passed!' : 'Threshold Not Reached'}
                 </h3>
-                <p className="mt-1 text-sm text-slate-600">
+                <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
                   Score:{' '}
                   <span
-                    className={`font-extrabold ${gradingResult.passed ? 'text-emerald-600' : 'text-amber-600'}`}
+                    className={`font-extrabold ${gradingResult.passed ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}
                   >
                     {gradingResult.score} / {gradingResult.total}
                   </span>{' '}
@@ -1084,7 +1086,7 @@ export const Index: React.FC = () => {
                       setSelectedAnswers({});
                       setGradingResult(null);
                     }}
-                    className="mt-4 w-full rounded-xl bg-slate-900 py-2.5 text-xs font-bold text-white hover:bg-blue-600"
+                    className="mt-4 w-full rounded-xl bg-slate-900 dark:bg-slate-800 py-2.5 text-xs font-bold text-white hover:bg-blue-600 dark:hover:bg-indigo-600"
                   >
                     Retry Checkpoint
                   </button>
@@ -1092,7 +1094,7 @@ export const Index: React.FC = () => {
 
                 <button
                   onClick={() => setActiveQuizItem(null)}
-                  className="mt-2 w-full rounded-xl bg-slate-100 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-200"
+                  className="mt-2 w-full rounded-xl bg-slate-100 dark:bg-slate-800/80 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
                 >
                   Close Checkpoint
                 </button>
@@ -1104,20 +1106,20 @@ export const Index: React.FC = () => {
 
       {/* LOGOUT CONFIRMATION MODAL */}
       {showLogoutConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1526] p-6 shadow-2xl">
             <div className="flex items-center justify-between">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400">
                 <LogOut size={20} />
               </div>
-              <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+              <span className="rounded-full bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Session Active
               </span>
             </div>
 
-            <h3 className="mt-4 text-base font-extrabold text-slate-900">End Active Session?</h3>
-            <p className="mt-1.5 text-xs leading-relaxed text-slate-500">
-              You are signed in as <span className="font-semibold text-slate-800">{displayName}</span> ({roleDisplay}).
+            <h3 className="mt-4 text-base font-extrabold text-slate-900 dark:text-white">End Active Session?</h3>
+            <p className="mt-1.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+              You are signed in as <span className="font-semibold text-slate-800 dark:text-slate-200">{displayName}</span> ({roleDisplay}).
               Signing out will invalidate your local session token and return to the public gateway.
             </p>
 
@@ -1125,7 +1127,7 @@ export const Index: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowLogoutConfirm(false)}
-                className="flex-1 rounded-xl border border-slate-200 py-2.5 text-xs font-bold text-slate-600 transition hover:bg-slate-50 hover:text-slate-900"
+                className="flex-1 rounded-xl border border-slate-200 dark:border-slate-800 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-400 transition hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
               >
                 Stay Logged In
               </button>
