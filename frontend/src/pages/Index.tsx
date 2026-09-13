@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import AcademiaLogo from '../components/AcademiaLogo';
-import AuthModal from '../components/AuthModal';
+import { AcademiaLogo } from '../components/AcademiaLogo';
+import { AuthModal } from '../components/AuthModal';
 import CourseViewerModal from '../components/CourseViewerModal';
 import CertificateModal from '../components/CertificateModal';
 import AdminConsole from '../components/AdminConsole';
